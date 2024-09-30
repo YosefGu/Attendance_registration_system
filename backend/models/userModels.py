@@ -4,7 +4,7 @@ from config import Config
 import bcrypt
 from email_validator import validate_email, EmailNotValidError
 from password_validator import PasswordValidator
-
+from flask_jwt_extended import create_access_token
 
 client = MongoClient(Config.MONGO_URI)
 db = client['Attendance_registration_system']
@@ -39,8 +39,10 @@ def signup(data):
     hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt)
     result = users_collection.insert_one({"email": email, "password": hashed_password})
 
+    access_token = create_access_token(identity=str(result.inserted_id))
+    
     if result.inserted_id:
-        return {"message": "User created successfuly", "user_id": str(result.inserted_id)}
+        return {"message": "User created successfuly", "user_id": str(result.inserted_id), "access_token": access_token}
     else:
         raise ValueError("Failed to create user.") 
 
@@ -61,7 +63,9 @@ def login(data):
     if not match:
          raise ValueError("Incurrect password.")
     
-    return {"message": "User Login successfuly", "user_id": str(user['_id'])}
+    access_token = create_access_token(identity=str(user['_id']))
+    
+    return {"message": "User Login successfuly", "user_id": str(user['_id']), "access_token": access_token}
 
 # Get a user
 def get_user(id):
