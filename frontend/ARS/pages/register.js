@@ -1,14 +1,19 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { View, TextInput, Button, Text, StyleSheet, Alert } from 'react-native';
 import axios from 'axios';
 import { API_URL } from '@env'
+import { storeToken } from "../utils/tokenHandling"
+import { AuthContext } from "../context/auth"
 
-const Register = () => {
+
+const Register = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const { setIsAuthenticated } = useContext(AuthContext)
 
+  
   const handleRegister = async () => {
     if (!email || !password || !confirmPassword) {
         Alert.alert('Please fill out all fields.');
@@ -26,19 +31,23 @@ const Register = () => {
       password: password
     };
 
-    axios.post(`${API_URL}/signup`, data)
-      .then(response => {
-        setLoading(false);
-        Alert.alert('Registration Successful', 'You can now log in.');
-        // console.log('Response:', response.data);
-      })
-      .catch(error => {
-        setLoading(false);
-        // console.error('Error:', error.response.data.error);
-        Alert.alert('Registration Failed', error.response.data.error );
-      });
+    try {
+      const response = axios.post(`${API_URL}/signup`, data)
+      setLoading(false);
+      Alert.alert('Registration Successful');
 
-  };
+      await storeToken(response.data.access_token);
+      setIsAuthenticated(true);
+      navigation.navigate('Home')
+
+    } catch(error) {
+      if (error.response) {
+        Alert.alert('Registration Failed', error.response.data.error )
+      }
+      setLoading(false)
+      console.log(error)
+    }
+};
 
   return (
     <View style={styles.container}>

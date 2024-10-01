@@ -1,16 +1,43 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import * as React from 'react'
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { AuthProvider, AuthContext } from './context/auth';
 import Register from './pages/register';
 import Login from './pages/login';
+import Home from './pages/home';
 
+const Stack = createNativeStackNavigator();
 export default function App() {
+  
+
   return (
-    // Register()
-    Login()
-    // <View style={styles.container}>
-    //   <Text>Welcome to my APP</Text>
-    //   <StatusBar style="auto" />
-    // </View>
+    <AuthProvider>
+      <NavigationContainer>
+        <AuthContext.Consumer>
+          {({ isAuthenticated }) => (
+            <Stack.Navigator>
+              { isAuthenticated ? (
+                <Stack.Screen  
+                  name = 'Home'
+                  component = {Home} 
+                />
+              ) : (
+                <>
+                 <Stack.Screen 
+                    name="Login" 
+                    component={Login} 
+                  />
+                  <Stack.Screen 
+                    name="Register" 
+                    component={Register} 
+                  />
+                </>
+              )}
+            </Stack.Navigator>
+          )}
+        </AuthContext.Consumer>
+      </NavigationContainer>
+    </AuthProvider>
   );
 }
 
