@@ -1,7 +1,16 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, jsonify
 from controllers.userControllers import User
+from flask_jwt_extended import verify_jwt_in_request
 
 users = Blueprint('Users', __name__)
+
+@users.route('/verify-token', methods=['POST'])
+def verify_token():
+    try:
+        verify_jwt_in_request()
+        return jsonify({"isValid": True}), 200
+    except Exception as e:
+        return jsonify({"isValid": False, "error": str(e)}), 400
 
 @users.route('/signup', methods=['POST'])
 def signup_route():
