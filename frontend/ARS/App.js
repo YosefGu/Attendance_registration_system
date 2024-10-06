@@ -5,6 +5,12 @@ import { AuthProvider, AuthContext } from './context/auth';
 import Register from './pages/register';
 import Login from './pages/login';
 import Home from './pages/home';
+import { Attendance } from './pages/Home/attendance';
+import { Setting } from './pages/Home/setting';
+import { Profile } from './pages/Setting/profile'
+import { ManagedStudents } from './pages/setting/managedStudents';
+import { ManagedTeam } from './pages/setting/managedTeam';
+import { AddStudent } from './pages/Student/addStudent';
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -17,10 +23,36 @@ export default function App() {
           {({ isAuthenticated }) => (
             <Stack.Navigator>
               { isAuthenticated ? (
-                <Stack.Screen  
-                  name = 'Home'
-                  component = {Home} 
-                />
+                <>
+                  <Stack.Screen  
+                    name = 'Home'
+                    component = {Home} 
+                  />
+                  <Stack.Screen  
+                    name = 'Attendance'
+                    component = {Attendance} 
+                  />
+                  <Stack.Screen  
+                    name = 'Setting'
+                    component = {Setting} 
+                  />
+                  <Stack.Screen  
+                    name = 'Profile'
+                    component = {Profile} 
+                  />
+                  <Stack.Screen  
+                    name = 'ManagedStudents'
+                    component = {ManagedStudents} 
+                  />
+                  <Stack.Screen  
+                    name = 'ManagedTeam'
+                    component = {ManagedTeam} 
+                  />
+                  <Stack.Screen  
+                    name = 'AddStudent'
+                    component = {AddStudent} 
+                  />
+                </>
               ) : (
                 <>
                  <Stack.Screen 
@@ -40,12 +72,3 @@ export default function App() {
     </AuthProvider>
   );
 }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: '#fff',
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//   },
-// });

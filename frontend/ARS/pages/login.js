@@ -2,7 +2,7 @@ import axios from "axios"
 import { useContext, useState } from "react"
 import { Alert, Button, TextInput, View, Text } from "react-native"
 import { API_URL } from '@env'
-import { StyleSheet } from "react-native"
+import  styles  from '../utils/globalStyles'
 import { storeToken } from "../utils/tokenHandling"
 import { AuthContext } from "../context/auth"
 
@@ -75,28 +75,4 @@ return(
   )
 }
 
-const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      justifyContent: 'center',
-      padding: 20,
-      backgroundColor: '#fff'
-    },
-    title: {
-      fontSize: 24,
-      fontWeight: 'bold',
-      marginBottom: 20,
-      textAlign: 'center'
-    },
-    input: {
-      borderWidth: 1,
-      borderColor: '#ccc',
-      borderRadius: 5,
-      padding: 10,
-      marginVertical: 10
-    },
-    buttonContainer: {
-      marginBottom: 10
-    }
-  });
 export default Login
