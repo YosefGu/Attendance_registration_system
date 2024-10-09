@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, jsonify
 from controllers.userControllers import User
 from flask_jwt_extended import verify_jwt_in_request
 
@@ -26,8 +26,7 @@ def get_user_route(id):
 
 @users.route('/user/<id>', methods=['PUT'])
 def update_user_route(id):
-    data = request.json
-    return User.update_user_(id, data)
+    return User.update_user_(id)
 
 @users.route('/user/<id>', methods=['DELETE'])
 def delete_user_route(id):

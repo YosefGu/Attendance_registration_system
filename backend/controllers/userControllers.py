@@ -35,9 +35,10 @@ class User:
         except Exception as e:
             return jsonify({"error": str(e)}), 500
         
-    def update_user_(id, user):
+    def update_user_(id):
         try:
             user_id = ObjectId(id)
+            user = request.json
             result = update_user(user_id, user)
             if result:
                 return dumps(result)
@@ -50,7 +51,7 @@ class User:
     def delete_user_(id):
         try:
             user_id = ObjectId(id)
-            user = delete_user({"_id": user_id})
+            user = delete_user(user_id)
             if user:
                 return jsonify({"message": "User deleted successfuly"})
             else:

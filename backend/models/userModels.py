@@ -5,6 +5,8 @@ import bcrypt
 from email_validator import validate_email, EmailNotValidError
 from password_validator import PasswordValidator
 from flask_jwt_extended import create_access_token
+from datetime import timedelta
+
 
 client = MongoClient(Config.MONGO_URI)
 db = client['Attendance_registration_system']
@@ -39,7 +41,7 @@ def signup(data):
     hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt)
     result = users_collection.insert_one({"email": email, "password": hashed_password})
 
-    access_token = create_access_token(identity=str(result.inserted_id))
+    access_token = create_access_token(identity=str(result.inserted_id), expires_delta=timedelta(days=60))
     
     if result.inserted_id:
         return {"message": "User created successfuly", "user_id": str(result.inserted_id), "access_token": access_token}
@@ -63,7 +65,7 @@ def login(data):
     if not match:
          raise ValueError("Incurrect password.")
     
-    access_token = create_access_token(identity=str(user['_id']))
+    access_token = create_access_token(identity=str(user['_id']), expires_delta=timedelta(days=60))
     
     return {"message": "User Login successfuly", "user_id": str(user['_id']), "access_token": access_token}
 
@@ -81,7 +83,7 @@ def update_user(user_id, user):
 
 # Delete user
 def delete_user(id):
-    return users_collection.find_one_and_delete(id)
+    return users_collection.find_one_and_delete({"_id": id})
 
 # Get all users
 def get_all_users():
