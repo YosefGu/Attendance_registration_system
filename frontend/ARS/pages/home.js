@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import { View, Text } from 'react-native';
 import { AuthContext } from '../context/auth';
+import { CustomButton } from '../utils/customButton';
 import styles from '../utils/globalStyles';
 
 const Home = ({ navigation }) => {
@@ -18,19 +19,9 @@ const Home = ({ navigation }) => {
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Welcome to My App!</Text>
-            <View style={styles.buttonContainer}>
-          <Button 
-              title= 'Attendance'
-              onPress={handleAttendance}
-          />
-        </View>
-        <View style={styles.buttonContainer}>
-          <Button 
-              title= 'Setting'
-              onPress={handleSetting}
-          />
-        </View>
-            <Button title='Logout' onPress={logout} />
+            <CustomButton title='Attendance' onPress={handleAttendance}/>
+            <CustomButton title='Setting' onPress={handleSetting}/>
+            <CustomButton title='Logout' onPress={logout}/>
         </View>
     );
 };

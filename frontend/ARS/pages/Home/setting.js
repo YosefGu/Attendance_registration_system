@@ -1,5 +1,6 @@
-import { Text, View, Button } from "react-native"
+import { View } from "react-native"
 import styles from "../../utils/globalStyles"
+import { CustomButton } from "../../utils/customButton"
 
 
 export const Setting = ( {navigation} ) => {
@@ -19,24 +20,9 @@ export const Setting = ( {navigation} ) => {
 
   return (
     <View style={styles.container}>
-        <View style={styles.buttonContainer}>
-              <Button 
-                  title= 'Profile'
-                  onPress={handledProfile}
-              />
-        </View> 
-        <View style={styles.buttonContainer}>
-              <Button 
-                  title= 'Managed students'
-                  onPress={handledManageStudents}
-              />
-        </View>
-        <View style={styles.buttonContainer}>
-              <Button 
-                  title= 'Managed team'
-                  onPress={handledManagedTeam}
-              />
-        </View>  
+        <CustomButton title='Profile' onPress={handledProfile}/>
+        <CustomButton title='Managed students' onPress={handledManageStudents}/>
+        <CustomButton title='Managed team' onPress={handledManagedTeam}/>
     </View>
   )
 }

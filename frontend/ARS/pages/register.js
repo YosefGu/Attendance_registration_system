@@ -5,6 +5,7 @@ import { API_URL } from '@env'
 import { storeToken } from "../utils/tokenHandling"
 import { AuthContext } from "../context/auth"
 import styles from '../utils/globalStyles';
+import { CustomButton } from '../utils/customButton';
 
 const Register = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -12,13 +13,13 @@ const Register = ({ navigation }) => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const { setIsAuthenticated } = useContext(AuthContext)
-
+  const [isRegisterClicked, setIsRegisterClicked] = useState(false)
   
   const handleRegister = async () => {
     if (!email || !password || !confirmPassword) {
-        Alert.alert('Please fill out all fields.');
-        return;
-      }
+      setIsRegisterClicked(true)
+      return;
+    }
     if (password !== confirmPassword) {
       Alert.alert('Passwords do not match.');
       return;
@@ -45,7 +46,6 @@ const Register = ({ navigation }) => {
         Alert.alert('Registration Failed', error.response.data.error )
       }
       setLoading(false)
-      console.log(error)
     }
 };
 
@@ -53,7 +53,7 @@ const Register = ({ navigation }) => {
     <View style={styles.container}>
       <Text style={styles.title}>Register</Text>
       <TextInput
-        style={styles.input}
+        style={[styles.input, isRegisterClicked && !email ? styles.inputError : null]}
         placeholder="Email"
         value={email}
         onChangeText={setEmail}
@@ -62,7 +62,7 @@ const Register = ({ navigation }) => {
       />
 
       <TextInput
-        style={styles.input}
+        style={[styles.input, isRegisterClicked && !password ? styles.inputError : null]}
         placeholder="Password"
         value={password}
         onChangeText={setPassword}
@@ -70,16 +70,15 @@ const Register = ({ navigation }) => {
       />
 
       <TextInput
-        style={styles.input}
+        style={[styles.input, isRegisterClicked && !confirmPassword ? styles.inputError : null]}
         placeholder="Confirm Password"
         value={confirmPassword}
         onChangeText={setConfirmPassword}
         secureTextEntry
       />
-
-      <Button
-        title={loading ? 'Registering...' : 'Register'}
-        onPress={handleRegister}
+      <CustomButton 
+        title={loading ? 'Registering...' : 'Register'}  
+        onPress={handleRegister} 
         disabled={loading}
       />
     </View>
