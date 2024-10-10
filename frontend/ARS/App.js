@@ -8,9 +8,10 @@ import Home from './pages/home';
 import { Attendance } from './pages/Home/attendance';
 import { Setting } from './pages/Home/setting';
 import { Profile } from './pages/Setting/profile'
-import { ManagedStudents } from './pages/setting/managedStudents';
+import { ManageStudents } from './pages/Setting/manageStudents';
 import { ManagedTeam } from './pages/Setting/managedTeam'
 import { AddStudent } from './pages/Student/addStudent';
+
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -41,8 +42,8 @@ export default function App() {
                     component = {Profile} 
                   />
                   <Stack.Screen
-                    name='ManagedStudents'
-                    component={ManagedStudents}
+                    name='ManageStudents'
+                    component={ManageStudents}
                   />
                   <Stack.Screen
                     name='ManagedTeam'
