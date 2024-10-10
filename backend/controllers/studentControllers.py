@@ -43,7 +43,7 @@ class Student:
             result = add_students_file(file) 
             return jsonify({"message": result}), 201
         except Exception as e:
-            return jsonify({"error": str(e)}), 500
+            return jsonify({"error": "An unexpected error.", "detailes":str(e)}, ), 500
         
     def update_student_(id):
         try:
