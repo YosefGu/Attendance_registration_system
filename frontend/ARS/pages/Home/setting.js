@@ -10,7 +10,7 @@ export const Setting = ( {navigation} ) => {
     }
 
     const handledManageStudents = () => {
-        navigation.navigate('ManagedStudents')
+        navigation.navigate('ManageStudents')
     }
 
     const handledManagedTeam = () => {
