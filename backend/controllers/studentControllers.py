@@ -4,7 +4,7 @@ from bson.json_util import dumps
 from bson.objectid import ObjectId
 
 class Student:
-
+    @staticmethod
     def get_all_students_():
         try:
             cursor = get_all_students()
@@ -15,7 +15,8 @@ class Student:
                 return jsonify({"error":"Students NOT found."}), 404
         except Exception as e:
             return jsonify({"error": str(e)}), 500
-        
+    
+    @staticmethod    
     def get_student_(id):
         try:
             student_id = ObjectId(id)
@@ -26,25 +27,28 @@ class Student:
                 return jsonify({"error": "Student NOT found"}), 404
         except Exception as e:
             return jsonify({"error": str(e)}), 500
-        
+
+    @staticmethod    
     def add_student_():
         try:
             data = request.json
             student = add_student(data)
-            return jsonify(student), 201
+            return student, 201
         except Exception as e:
             return jsonify({"error": str(e)}), 500
 
+    @staticmethod
     def add_students_file():
         if 'file' not in request.files:
             return jsonify({"error": "No file provided"}), 400
         try:
             file = request.files['file']
             result = add_students_file(file) 
-            return jsonify({"message": result}), 201
+            return result, 201
         except Exception as e:
-            return jsonify({"error": "An unexpected error.", "detailes":str(e)}, ), 500
-        
+            return jsonify({"error": "An unexpected error.", "details":str(e)}, ), 500
+    
+    @staticmethod
     def update_student_(id):
         try:
             student_id = ObjectId(id)
@@ -56,13 +60,14 @@ class Student:
                 return jsonify({"error": "Student NOT updated."}) 
         except Exception as e:
             return jsonify({"error": str(e)}), 500
-        
+
+    @staticmethod    
     def delete_student_(id):
         try:
             student_id = ObjectId(id)
             student = delete_student(student_id)
             if student:
-                return jsonify({"message": "Student deleted successfuly"})
+                return jsonify({"message": "Student deleted successfuly", "id":id})
             else:
                 return jsonify({"error": "Student NOT found"}), 404
         except Exception as e:

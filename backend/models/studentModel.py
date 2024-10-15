@@ -16,14 +16,15 @@ def get_student(id):
 
 # Add student
 def add_student(data):
-    name, lName, id, parentA, phoneA = data.values()
+    name, lName, id, parentA, phoneA, parentB, phoneB = data.values()
     if not name or not lName or not id or not parentA or not phoneA:
         raise ValueError("The fields - name, lname, parentA, phoneA, MUST be filled ")
     exists = students_collection.find_one({"id": id})
     if exists:
         raise ValueError("The student allready exists.")
     result = students_collection.insert_one(data)
-    return str(result.inserted_id)
+    data['_id'] =  {"$oid": str(result.inserted_id)}
+    return data
     
 # Add students list by exel file
 def add_students_file(file):
@@ -32,6 +33,7 @@ def add_students_file(file):
     
     workbook = openpyxl.load_workbook(file)
     sheet = workbook.active
+    new_students = []
     for row in sheet.iter_rows(min_row=2, values_only=True):
         fName, lName, id, parentA, phoneA, parentB, phoneB = row
         student = {
@@ -45,8 +47,14 @@ def add_students_file(file):
         }
         exists = students_collection.find_one({"id": id})
         if not exists:
-            students_collection.insert_one(student)
-    return "File processed successfully"
+            result = students_collection.insert_one(student)
+            student['_id'] = {"$oid": str(result.inserted_id)}
+            new_students.append(student)
+    if new_students:
+        return {"title":"File processed successfully", "message": "New students added.", "students": new_students}
+    else:
+        return {"title":"Duplicate Data Found","message": "All the students in the uploaded file already exist in the system. No new students were added."}
+    
 
 # Update a student
 def update_student(student_id, student):
