@@ -36,6 +36,10 @@ def add_students_file(file):
     new_students = []
     for row in sheet.iter_rows(min_row=2, values_only=True):
         fName, lName, id, parentA, phoneA, parentB, phoneB = row
+        
+        if not fName or not lName or not id or not parentA or not phoneA:
+            raise ValueError(f"Missing required fields in row: fName, lName, id, parentA, phoneA ")
+        
         student = {
             "name" : fName,
             "lName": lName,
