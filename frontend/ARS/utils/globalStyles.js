@@ -14,6 +14,10 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     textAlign: 'center'
   },
+  text: {
+    fontSize:20, 
+    fontWeight:'bold'
+  },
   input: {
     borderWidth: 1,
     borderColor: '#ccc',
