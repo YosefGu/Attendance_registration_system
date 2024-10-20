@@ -2,6 +2,7 @@ import * as React from 'react'
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { AuthProvider, AuthContext } from './context/auth';
+import { StudentProvider } from './context/studentsRequests';
 import Register from './pages/register';
 import Login from './pages/login';
 import Home from './pages/home';
@@ -19,6 +20,7 @@ export default function App() {
 
   return (
     <AuthProvider>
+      <StudentProvider>
       <NavigationContainer>
         <AuthContext.Consumer>
           {({ isAuthenticated }) => (
@@ -70,6 +72,7 @@ export default function App() {
           )}
         </AuthContext.Consumer>
       </NavigationContainer>
+      </StudentProvider>
     </AuthProvider>
   );
 }
