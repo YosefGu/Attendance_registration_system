@@ -1,15 +1,14 @@
 import { View, Text, Modal, StyleSheet, Image, Alert} from 'react-native'
-import { useState } from 'react'
+import { useState, useContext } from 'react'
 import { CustomButton } from '../../utils/customButton';
 import * as DocumentPicker from 'expo-document-picker'
 import styles from '../../utils/globalStyles';
-import { API_URL } from '@env'
-import { getToken } from '../../utils/tokenHandling';
-import axios from 'axios';
+import { StudentContext } from '../../context/studentsRequests';
 
 
-export const CustemModal = ({onClose, visible}) => {
+export const CustemModal = ({onClose, visible, navigation }) => {
   const [form, setForm] = useState('')
+  const { addStudentsExcelFile } = useContext(StudentContext)
 
   const MIME = {
     // Excel 2007 and later
@@ -17,31 +16,29 @@ export const CustemModal = ({onClose, visible}) => {
     // Older excel files
     '.xls': 'application/vnd.ms-excel'
   }
+
   const closeModal = () => {
     onClose()
     setForm('')
   }
+
   const uploadFile = async () => {
     const formData = new FormData();
+
     formData.append('file', {
       uri: form.uri,
       type: form.mimeType || MIME['.xlsx'],
       name: form.name,
     });
 
-    try {
-      const token = await getToken()
-      const response = await axios.post(`${API_URL}/students-file`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          'Authorization': `Bearer ${token}`
-        }
-      })
-      closeModal()
-      Alert.alert('Upload successful', response.data.message)
-    } catch (error) {
-      Alert.alert(error.response.data.error, error.response.data.detailes)
-      setForm('')
+    closeModal()
+    result = await addStudentsExcelFile(formData)
+    
+    if (result.error) {
+      Alert.alert(result.error, result.details)  
+    } else {
+      navigation.navigate('ManageStudents');
+      Alert.alert(result.title, result.message)
     }
   }
 
