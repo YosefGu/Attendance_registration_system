@@ -14,8 +14,8 @@ export const Attendance = () => {
   const { checkedIds, setCheckedIds, addAttendancList } = useContext(AttendanceContext)
 
   const handleCheckbox = (studentID) => {
-    if (checkedIds.includes(studentID)) {
-      setCheckedIds(checkedIds.filter(_id => _id !== studentID))
+    if (checkedIds.some(item => item.$oid === studentID.$oid)) {
+      setCheckedIds(checkedIds.filter(_id => _id.$oid !== studentID.$oid))
     } else {
       setCheckedIds([...checkedIds, studentID])
     }
@@ -48,7 +48,7 @@ export const Attendance = () => {
             onPress={() => handleCheckbox(student._id)}
             />
             <Text
-              style={checkedIds.includes(student._id) ? localStyle.checkedText : localStyle.uncheckedText}
+              style={checkedIds.some(item => item.$oid === student._id.$oid) ? localStyle.checkedText : localStyle.uncheckedText}
             > {`${student.name} ${student.lName}`}
             </Text>
           </View>
