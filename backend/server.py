@@ -8,7 +8,7 @@ import os
 
 from routes.userRoutes import users
 from routes.studentRoutes import students
-
+from routes.attendanceRoutes import attendance_lists
 
 load_dotenv()
 
@@ -24,7 +24,7 @@ app.config.from_object(Config)
 
 app.register_blueprint(users)
 app.register_blueprint(students)
-
+app.register_blueprint(attendance_lists)
 
 jwt = init_jwt(app)
 public_routes = ['/signup', '/login']
