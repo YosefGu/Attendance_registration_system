@@ -8,12 +8,13 @@ db = client['Attendance_registration_system']
 attendance_collection = db['attendance_lists']
  
 # Get attendance list
-def get_attendance_list():
+def get_attendance_list(id):
     current_date = datetime.now().date() 
     target_date = datetime.combine(current_date, datetime.min.time()) 
     start_of_day = target_date
     end_of_day = target_date + timedelta(days=1)
     exists = attendance_collection.find_one({
+        "institutionNum": id,
         "_id": {
             "$gte": ObjectId.from_datetime(start_of_day),
             "$lt": ObjectId.from_datetime(end_of_day)
@@ -25,7 +26,8 @@ def get_attendance_list():
     
 # Add attendance list
 def add_attendance_list(data):
-    exists = get_attendance_list()
+    id = data['institutionNum']
+    exists = get_attendance_list(id)
     if exists:
         result = attendance_collection.find_one_and_update(
             {"_id": exists["_id"]},

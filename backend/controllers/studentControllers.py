@@ -5,9 +5,10 @@ from bson.objectid import ObjectId
 
 class Student:
     @staticmethod
-    def get_all_students_():
+    def get_all_students_(id):
         try:
-            cursor = get_all_students()
+            userID = id
+            cursor = get_all_students(userID)
             students = list(cursor)
             if len(students) > 0:
                 return dumps(students)
@@ -43,7 +44,8 @@ class Student:
             return jsonify({"error": "No file provided"}), 400
         try:
             file = request.files['file']
-            result = add_students_file(file) 
+            userID = request.headers.get('User-ID')
+            result = add_students_file(file, userID) 
             return result, 201
         except Exception as e:
             return jsonify({"error": "An unexpected error.", "details":str(e)}, ), 500

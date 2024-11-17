@@ -7,8 +7,8 @@ db = client['Attendance_registration_system']
 students_collection = db['students']
 
 # Get all students
-def get_all_students():
-    return students_collection.find()
+def get_all_students(userID):
+    return students_collection.find({"institutionNum": userID})
 
 # Get a student
 def get_student(id):
@@ -16,7 +16,7 @@ def get_student(id):
 
 # Add student
 def add_student(data):
-    name, lName, id, parentA, phoneA, parentB, phoneB = data.values()
+    name, lName, id, parentA, phoneA, parentB, phoneB, institutionNum = data.values()
     if not name or not lName or not id or not parentA or not phoneA:
         raise ValueError("The fields - name, lname, parentA, phoneA, MUST be filled ")
     exists = students_collection.find_one({"id": id})
@@ -27,7 +27,7 @@ def add_student(data):
     return data
     
 # Add students list by exel file
-def add_students_file(file):
+def add_students_file(file, userID):
     if not file.filename.endswith('.xlsx'):
         raise ValueError("Invalid file format, only .xlsx allowed")
     
@@ -39,7 +39,6 @@ def add_students_file(file):
         
         if not fName or not lName or not id or not parentA or not phoneA:
             raise ValueError(f"Missing required fields in row: fName, lName, id, parentA, phoneA ")
-        
         student = {
             "name" : fName,
             "lName": lName,
@@ -47,7 +46,8 @@ def add_students_file(file):
             "parentA": parentA,
             "phoneA": phoneA,
             "parentB": parentB,
-            "phoneB": phoneB
+            "phoneB": phoneB,
+            "institutionNum": userID
         }
         exists = students_collection.find_one({"id": id})
         if not exists:

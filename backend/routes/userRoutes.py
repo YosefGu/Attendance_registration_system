@@ -35,3 +35,11 @@ def delete_user_route(id):
 @users.route('/users', methods=['GET'])
 def get_all_users():
     return User.get_all_users_()
+
+@users.route('/get-team/<institutionNum>', methods=['GET'])
+def get_team_route(institutionNum):
+    return User.get_team_(institutionNum)
+
+@users.route('/add-team',methods=['POST'])
+def add_team_route():
+    return User.add_team_()

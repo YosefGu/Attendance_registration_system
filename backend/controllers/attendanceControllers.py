@@ -4,9 +4,9 @@ from bson.json_util import dumps
 
 class Attendance:
     @staticmethod
-    def get_attendance_list_():
+    def get_attendance_list_(id):
         try:
-            result = get_attendance_list()
+            result = get_attendance_list(id)
             if result:
                 return dumps(result), 200
             return jsonify({"error": "The attendance list is NOT FOUND."}), 404

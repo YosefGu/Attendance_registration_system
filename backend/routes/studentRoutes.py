@@ -4,9 +4,9 @@ from controllers.studentControllers import Student
 
 students = Blueprint('Students', __name__)
 
-@students.route('/students', methods=['GET'])
-def get_all_students_route():
-    return Student.get_all_students_()
+@students.route('/students/<id>', methods=['GET'])
+def get_all_students_route(id):
+    return Student.get_all_students_(id)
 
 @students.route('/students-file', methods=['POST'])
 def add_students_file():
