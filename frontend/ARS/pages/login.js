@@ -4,11 +4,13 @@ import { Alert, TextInput, View, Text } from "react-native"
 import { API_URL } from '@env'
 import  styles  from '../utils/globalStyles'
 import { storeToken } from "../utils/tokenHandling"
+import { storeUserID } from "../utils/storID"
+
 import { AuthContext } from "../context/auth"
 import { CustomButton } from "../utils/customButton"
 
 
-const Login = ({ navigation }) => {
+export const Login = ({ navigation }) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
@@ -32,6 +34,7 @@ const Login = ({ navigation }) => {
       const response = await axios.post(`${API_URL}/login`, data);
       setLoading(false);
       await storeToken(response.data.access_token);
+      await storeUserID(response.data.user_id);
       setIsAuthenticated(true)
       navigation.navigate('Home')
     } catch (error) {
@@ -64,4 +67,3 @@ return(
   )
 }
 
-export default Login

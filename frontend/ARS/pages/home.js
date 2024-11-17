@@ -4,8 +4,8 @@ import { AuthContext } from '../context/auth';
 import { CustomButton } from '../utils/customButton';
 import styles from '../utils/globalStyles';
 
-const Home = ({ navigation }) => {
 
+export const Home = ({ navigation }) => {
     const { logout } = useContext(AuthContext);
 
     const handleAttendance = () => {
@@ -26,4 +26,4 @@ const Home = ({ navigation }) => {
     );
 };
 
-export default Home;
+

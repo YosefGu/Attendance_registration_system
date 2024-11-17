@@ -1,115 +1,122 @@
-import { useState, useContext } from "react"
-import { Text, View, TextInput } from "react-native"
-import styles from "../../utils/globalStyles"
-import { CustemModal } from "./modal"
-import { CustomButton } from "../../utils/customButton"
-import { StudentContext } from "../../context/studentsRequests"
-
-
+import { useContext, useState } from "react";
+import { Text, View, TextInput } from "react-native";
+import styles from "../../utils/globalStyles";
+import { CustemModal } from "./modal";
+import { CustomButton } from "../../utils/customButton";
+import { addStudent } from "../../requests/studentsRequests";
+import { UserContext } from '../../context/userContext'
+import { getUserID } from "../../utils/storID";
 
 export const AddStudent = ({ navigation }) => {
-    const [name, setName] = useState('')
-    const [lName, setLName] = useState('')
-    const [id, setId] = useState('')
-    const [parentA, setParentA] = useState('')
-    const [phoneA, setPhoneA] = useState('')
-    const [parentB, setParentB] = useState('')
-    const [phoneB, setPhoneB] = useState('') 
-
-    const [error, setError] = useState('')
-
-    const [isAddClicked, setIsAddClicked] = useState(false)
-    const [modalVisible, setModalVisibal] = useState(false)
-
-    const { addStudent } = useContext(StudentContext)
+    const { dispatch } = useContext(UserContext)
+    const [form, setForm] = useState({
+        name: '',
+        lName: '',
+        id: '',
+        parentA: '',
+        phoneA: '',
+        parentB: '',
+        phoneB: ''
+    });
+    const [error, setError] = useState('');
+    const [isAddClicked, setIsAddClicked] = useState(false);
+    const [modalVisible, setModalVisibal] = useState(false);
 
     const closeModal = () => {
-        setModalVisibal(false)
-    }
+        setModalVisibal(false);
+    };
+
+    const handleChange = (key, value) => {
+        setForm({
+            ...form,
+            [key]: value
+        });
+    };
 
     const handleAdd = async () => {
-        if(!name || !lName || !id || !parentA || !phoneA){
-            setIsAddClicked(true)
-            setError('The fields MUST be filed.')
-            return
+        const { name, lName, id, parentA, phoneA } = form;
+        if (!name || !lName || !id || !parentA || !phoneA) {
+            setIsAddClicked(true);
+            setError('The fields MUST be filled.');
+            return;
         }
-        const newStudent = {
-            name, lName, id,
-            parentA, phoneA,
-            parentB, phoneB
-        }
+        const institutionNum = await getUserID()
+        const newStudent = { ...form, institutionNum };
+        console.log(newStudent)
+        await addStudent(dispatch, newStudent); 
 
-        await addStudent(newStudent)
-        setError('')
-
-        setName('')
-        setLName('')
-        setId('')
-        setParentA('')
-        setPhoneA('')
-        setParentB('')
-        setPhoneB('')
-        navigation.navigate('ManageStudents')
-    }
+        setError('');
+        setForm({
+            name: '',
+            lName: '',
+            id: '',
+            parentA: '',
+            phoneA: '',
+            parentB: '',
+            phoneB: ''
+        });
+        navigation.navigate('ManageStudents');
+    };
 
     return (
-    <View style={styles.container}>
-        <CustomButton title='Upload a file' onPress={() => setModalVisibal(true)}/>
-        <CustemModal 
-            visible={modalVisible}
-            onClose={closeModal}
-            navigation={navigation}
-        />
-        {error ? <Text>{error}</Text> : null}
-        <TextInput 
-            style={[styles.input, isAddClicked && !name ? styles.inputError : null]}
-            placeholder="Name"
-            value={name}
-            onChangeText={(text) => setName(text.replace(/[^a-zA-Zא-ת\s]/g, ''))}
-        />
-        <TextInput 
-            style={[styles.input, isAddClicked && !lName ? styles.inputError : null]}
-            placeholder="Family name"
-            value={lName}
-            onChangeText={(text) => setLName(text.replace(/[^a-zA-Zא-ת\s]/g, ''))}
-        />
-         <TextInput 
-            style={[styles.input, isAddClicked && !id ? styles.inputError : null]}
-            placeholder="ID"
-            value={id}
-            onChangeText={(text) => setId(text.replace(/[^0-9]\s]/g, ''))}
-            keyboardType="numeric"
-            maxLength={10}
-        />
-        <TextInput 
-            style={[styles.input, isAddClicked && !parentA ? styles.inputError : null]}
-            placeholder="Parent A"
-            value={parentA}
-            onChangeText={(text) => setParentA(text.replace(/[^a-zA-Zא-ת\s]/g, ''))}
-        />
-        <TextInput 
-        style={[styles.input, isAddClicked && !phoneA ? styles.inputError : null]}
-        placeholder="Phone A"
-        value={phoneA}
-        onChangeText={(text) => setPhoneA(text.replace(/[^0-9]\s]/g, ''))}
-        keyboardType="numeric"
-        maxLength={10}
-        />
-        <TextInput 
-            style={styles.input}
-            placeholder="Parent B"
-            value={parentB}
-            onChangeText={(text) => setParentB(text.replace(/[^a-zA-Zא-ת\s]/g, ''))}
-        />
-        <TextInput 
-            style={styles.input}
-            placeholder="Phone B"
-            value={phoneB}
-            onChangeText={(text) => setPhoneB(text.replace(/[^0-9]\s]/g, ''))}
-            keyboardType="numeric"
-            maxLength={10}
-        />
-        <CustomButton title='Add' onPress={handleAdd}/>
-    </View>
-  )
-}
+        <View style={styles.container}>
+            <CustomButton title="Upload a file" onPress={() => setModalVisibal(true)} />
+            <CustemModal 
+                visible={modalVisible}
+                onClose={closeModal}
+                navigation={navigation}
+            />
+            {error ? <Text style={styles.errorText}>{error}</Text> : null}
+            
+            <TextInput 
+                style={[styles.input, isAddClicked && !form.name ? styles.inputError : null]}
+                placeholder="Name"
+                value={form.name}
+                onChangeText={(text) => handleChange('name', text.replace(/[^a-zA-Zא-ת\s]/g, ''))}
+            />
+            <TextInput 
+                style={[styles.input, isAddClicked && !form.lName ? styles.inputError : null]}
+                placeholder="Family name"
+                value={form.lName}
+                onChangeText={(text) => handleChange('lName', text.replace(/[^a-zA-Zא-ת\s]/g, ''))}
+            />
+            <TextInput 
+                style={[styles.input, isAddClicked && !form.id ? styles.inputError : null]}
+                placeholder="ID"
+                value={form.id}
+                onChangeText={(text) => handleChange('id', text.replace(/[^0-9]/g, ''))}
+                keyboardType="numeric"
+                maxLength={10}
+            />
+            <TextInput 
+                style={[styles.input, isAddClicked && !form.parentA ? styles.inputError : null]}
+                placeholder="Parent A"
+                value={form.parentA}
+                onChangeText={(text) => handleChange('parentA', text.replace(/[^a-zA-Zא-ת\s]/g, ''))}
+            />
+            <TextInput 
+                style={[styles.input, isAddClicked && !form.phoneA ? styles.inputError : null]}
+                placeholder="Phone A"
+                value={form.phoneA}
+                onChangeText={(text) => handleChange('phoneA', text.replace(/[^0-9]/g, ''))}
+                keyboardType="numeric"
+                maxLength={10}
+            />
+            <TextInput 
+                style={styles.input}
+                placeholder="Parent B"
+                value={form.parentB}
+                onChangeText={(text) => handleChange('parentB', text.replace(/[^a-zA-Zא-ת\s]/g, ''))}
+            />
+            <TextInput 
+                style={styles.input}
+                placeholder="Phone B"
+                value={form.phoneB}
+                onChangeText={(text) => handleChange('phoneB', text.replace(/[^0-9]/g, ''))}
+                keyboardType="numeric"
+                maxLength={10}
+            />
+            <CustomButton title="Add" onPress={handleAdd} />
+        </View>
+    );
+};

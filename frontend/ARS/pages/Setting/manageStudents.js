@@ -1,22 +1,24 @@
-import { TouchableOpacity, View, Image, StyleSheet, Text, Alert} from "react-native"
-import { useState, useContext, useEffect } from 'react'
+import {  View, Text, StyleSheet, TouchableOpacity, Alert, ScrollView,Image} from "react-native"
+import { useState, useContext } from 'react'
 import styles from "../../utils/globalStyles"
 import { CustomButton } from "../../utils/customButton"
 import { UpdateStudentModal } from "../Student/updateStudentModal"
-import { StudentContext } from "../../context/studentsRequests"
+import { UserContext } from "../../context/userContext"
+import { deleteStudent } from "../../requests/studentsRequests"
 
 export const ManageStudents = ({ navigation }) => {
+  const { state, dispatch } = useContext(UserContext)
   const [modalVisible, setModalVisibal] = useState(false)
   const [selectedStudent, setSelectedStudent] = useState('')
-
-  const { students, deleteStudent } = useContext(StudentContext)
+  
+  const students = state.students
 
   const closeModal = () => {
-        setModalVisibal(false)
+    setModalVisibal(false)
   }
 
   const handleAddStudents = () => {
-      navigation.navigate('AddStudent')
+    navigation.navigate('AddStudent')
   }
   const handleDelete = (student_id) => {
     Alert.alert(
@@ -29,7 +31,7 @@ export const ManageStudents = ({ navigation }) => {
         },
         {
           text:'מחק',
-          onPress: () => deleteStudent(student_id)
+          onPress: () => deleteStudent(dispatch, student_id)
         }
     ])
   }
@@ -50,7 +52,7 @@ export const ManageStudents = ({ navigation }) => {
       />
 
       <CustomButton title={'Add students'} onPress={handleAddStudents}/> 
-      {/* {students ? students.map((student, index) => console.log(student)) : null} */}
+      <ScrollView>
       { 
         students ? 
           students.map((student, index) => (
@@ -79,6 +81,7 @@ export const ManageStudents = ({ navigation }) => {
         )) : 
         null
       }
+      </ScrollView>
       
     </View>
   )
@@ -89,15 +92,14 @@ export const studStyle = StyleSheet.create({
     justifyContent:'flex-start'
   },
   student: {
-    flexDirection: 'row-reverse',
+    backgroundColor:'#7771',
+    margin:2,
+    padding:5,
+    paddingHorizontal:10,
+    flexDirection:'row-reverse',
     alignItems:'center',
-    justifyContent: 'space-between',
-    paddingRight:5,
-    marginBottom:5,
-    borderRadius:10,
-    borderBottomWidth:4,
-    borderRightWidth:4
-    
+    justifyContent:'space-between',
+    borderRadius:10
   },
   iconContainer: {
     flexDirection: 'row',
@@ -105,7 +107,7 @@ export const studStyle = StyleSheet.create({
   icon: {
     width: 35,
     height: 35,
-    tintColor:'#0f5168',
+    tintColor:'#068',
     marginHorizontal:5
   }
 })

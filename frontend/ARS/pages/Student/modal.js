@@ -3,12 +3,14 @@ import { useState, useContext } from 'react'
 import { CustomButton } from '../../utils/customButton';
 import * as DocumentPicker from 'expo-document-picker'
 import styles from '../../utils/globalStyles';
-import { StudentContext } from '../../context/studentsRequests';
+import { UserContext } from '../../context/userContext';
+import { addStudentsExcelFile } from '../../requests/studentsRequests';
+
 
 
 export const CustemModal = ({onClose, visible, navigation }) => {
+  const { dispatch } = useContext(UserContext)
   const [form, setForm] = useState('')
-  const { addStudentsExcelFile } = useContext(StudentContext)
 
   const MIME = {
     // Excel 2007 and later
@@ -32,7 +34,7 @@ export const CustemModal = ({onClose, visible, navigation }) => {
     });
 
     closeModal()
-    result = await addStudentsExcelFile(formData)
+    const result = await addStudentsExcelFile(dispatch, formData)
     
     if (result.error) {
       Alert.alert(result.error, result.details)  

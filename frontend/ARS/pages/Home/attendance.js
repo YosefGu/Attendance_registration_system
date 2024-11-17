@@ -1,17 +1,19 @@
 import { Text, View, StyleSheet, ScrollView } from "react-native"
-import { StudentContext } from "../../context/studentsRequests"
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 import styles from "../../utils/globalStyles"
 import { CustomButton } from "../../utils/customButton"
 import { CheckBox } from "react-native-elements"
-import { AttendanceContext } from "../../context/attendanceContext"
+import { UserContext } from "../../context/userContext"
+import { addAttendancList } from "../../requests/attendanceRequests"
+import { getUserID } from "../../utils/storID"
 
 
 
 export const Attendance = () => {
+  const { state, dispatch } = useContext(UserContext)
+  const students = state.students
+  const [checkedIds, setCheckedIds] = useState(state.attendance.checkedIDs || [])
 
-  const { students } = useContext(StudentContext)
-  const { checkedIds, setCheckedIds, addAttendancList } = useContext(AttendanceContext)
 
   const handleCheckbox = (studentID) => {
     if (checkedIds.some(item => item.$oid === studentID.$oid)) {
@@ -23,14 +25,16 @@ export const Attendance = () => {
 
 
   const handleSave = async () => {
-    data = {
+    const id = await getUserID()
+    const data = {
+      "institutionNum": id,
       "checkedIDs": checkedIds,
       "uncheckedIDs": students.reduce((result, student) => {
         if (!checkedIds.includes(student._id)) result.push(student._id)
           return result
       }, [])
     }
-    await addAttendancList(data)
+    await addAttendancList(dispatch, data)
   }
 
   return (

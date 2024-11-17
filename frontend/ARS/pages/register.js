@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { View, TextInput, Button, Text, StyleSheet, Alert } from 'react-native';
+import { View, TextInput, Text, Alert } from 'react-native';
 import axios from 'axios';
 import { API_URL } from '@env'
 import { storeToken } from "../utils/tokenHandling"
@@ -7,7 +7,7 @@ import { AuthContext } from "../context/auth"
 import styles from '../utils/globalStyles';
 import { CustomButton } from '../utils/customButton';
 
-const Register = ({ navigation }) => {
+export const Register = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -85,4 +85,4 @@ const Register = ({ navigation }) => {
   );
 };
 
-export default Register;
+
