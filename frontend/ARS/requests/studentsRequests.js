@@ -86,6 +86,11 @@ export const addStudentsExcelFile = async (dispatch, form) => {
         type: "ADD_STUDENTS",
         payload: response.data.students,
       });
+      const idsList = response.data.students.map((student) => student._id);
+      dispatch.attendance({
+        type: "ADD_LIST_TO_UNCHECKED_IDS",
+        payload: idsList,
+      });
     }
     return response.data;
   } catch (error) {
