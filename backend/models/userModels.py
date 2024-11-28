@@ -19,7 +19,9 @@ password_schema.min(8).max(20)
 # Adding a user - signup
 def signup(data):
     email = data['email']
-    password = data['password']
+    password = data.pop('password')
+
+    data['title'] = 'kindergartner'
 
     if not email:
         raise ValueError("Email is required.") 
@@ -40,7 +42,7 @@ def signup(data):
     
     salt = bcrypt.gensalt(10)
     hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt)
-    result = users_collection.insert_one({"password": hashed_password, "details": {"email": email, "title":"kindergartner"}})
+    result = users_collection.insert_one({"password": hashed_password, "details": data})
 
     update_user(result.inserted_id, {"institutionNum": str(result.inserted_id)})
 
@@ -79,7 +81,24 @@ def get_user(id):
 
 # Update a user
 def update_user(user_id, user_details):
-    return users_collection.find_one_and_update(
+    if 'password' in user_details:
+        password = user_details.pop('password')
+        if not password_schema.validate(password):
+            raise ValueError("Password is not strong enough. It must contain at least 8 characters.")
+        
+        salt = bcrypt.gensalt(10)
+        hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt)
+
+        return users_collection.find_one_and_update(
+            {"_id": user_id},
+            {"$set":{ 
+                **{f"details.{key}": value for key, value in user_details.items()},
+                "password": hashed_password 
+            }},
+            return_document=ReturnDocument.AFTER
+        )
+    else: 
+        return users_collection.find_one_and_update(
         {"_id": user_id},
         {"$set": {f"details.{key}": value for key, value in user_details.items()}},
         return_document=ReturnDocument.AFTER

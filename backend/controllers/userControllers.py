@@ -43,7 +43,7 @@ class User:
             if result:
                 return dumps(result)
             else:
-                return jsonify({"error": "User NOT updated."}) 
+                return jsonify({"error": "User NOT updated."}), 403
         except Exception as e:
             return jsonify({"error": str(e)}), 500
         
