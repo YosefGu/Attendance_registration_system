@@ -1,4 +1,11 @@
-import { Text, View, TextInput, Alert, StyleSheet } from "react-native";
+import {
+  Text,
+  View,
+  TextInput,
+  Alert,
+  StyleSheet,
+  ScrollView,
+} from "react-native";
 import { useContext, useState } from "react";
 import { CustomButton } from "../../utils/customButton";
 import { AuthContext } from "../../context/auth";
@@ -76,7 +83,7 @@ export const Profile = () => {
   };
 
   return (
-    <View style={style.container}>
+    <ScrollView style={style.container}>
       <View style={style.topContainer}>
         <View style={style.box}>
           <Text style={style.name}>
@@ -138,7 +145,7 @@ export const Profile = () => {
         <CustomButton title="Update" onPress={handleUpdate} />
         <CustomButton title="Delete Account" onPress={handleDelete} />
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -146,6 +153,7 @@ const style = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#e6f4fa",
+    paddingBottom: 15,
   },
   topContainer: {
     padding: 10,
