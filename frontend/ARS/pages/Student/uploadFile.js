@@ -6,10 +6,11 @@ import { CustomButton } from "../../utils/customButton";
 import { addStudentsExcelFile } from "../../requests/studentsRequests";
 import { UserContext } from "../../context/userContext";
 
-export const UploadFile = ({ closeModal }) => {
+export const UploadFile = ({ closeModal, navigation }) => {
   const { dispatch } = useContext(UserContext);
-  const [inProcess, setInProcess] = useState(false);
+  const [uploadingFile, setUploadingFile] = useState(false);
   const [file, setFile] = useState("");
+
   const MIME = {
     // Excel 2007 and later
     ".xlsx":
@@ -17,6 +18,7 @@ export const UploadFile = ({ closeModal }) => {
     // Older excel files
     ".xls": "application/vnd.ms-excel",
   };
+
   const pickFile = async () => {
     try {
       const res = await DocumentPicker.getDocumentAsync({
@@ -34,6 +36,7 @@ export const UploadFile = ({ closeModal }) => {
   };
 
   const uploadFile = async () => {
+    setUploadingFile(true);
     const formData = new FormData();
     formData.append("file", {
       uri: file.uri,
@@ -42,22 +45,26 @@ export const UploadFile = ({ closeModal }) => {
     });
 
     const result = await addStudentsExcelFile(dispatch, formData);
-    setInProcess(true);
-    closeModal();
+    setUploadingFile(false);
+    setFile(null);
     if (result.students) {
-      // Success case
-      navigation.navigate("ManageStudents");
-      Alert.alert(result.title, result.message);
+      Alert.alert(result.title, result.message, [
+        {
+          text: "OK",
+          onPress: () => navigation.navigate("ManageStudents"),
+        },
+      ]);
     } else if (result.message) {
-      // Data error
+      // Data exist
       Alert.alert(result.title, result.message);
     } else if (result.error) {
-      // Error case
+      // Error case - file content is not match
       Alert.alert(result.error, result.details);
     } else {
       // Fallback for unexpected results
       Alert.alert("Unexpected Error", "An unknown error occurred.");
     }
+    closeModal();
   };
 
   return (
@@ -70,6 +77,7 @@ export const UploadFile = ({ closeModal }) => {
           <Text style={style.text}>{file.name}</Text>
         </View>
       )}
+      {uploadingFile && <Text style={style.text}>מעלה את הקובץ המבוקש</Text>}
       <View style={style.buttonsContainer}>
         <CustomButton
           title={file ? "מחק" : "בטל"}
@@ -78,7 +86,7 @@ export const UploadFile = ({ closeModal }) => {
         <CustomButton
           title={file ? "העלה קובץ" : "בחר קובץ"}
           onPress={file ? uploadFile : pickFile}
-          disabled={inProcess}
+          disabled={uploadingFile}
         />
       </View>
     </View>
