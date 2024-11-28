@@ -1,5 +1,12 @@
 import { useContext, useState } from "react";
-import { Text, View, TextInput, StyleSheet, Modal } from "react-native";
+import {
+  Text,
+  View,
+  TextInput,
+  StyleSheet,
+  Modal,
+  ScrollView,
+} from "react-native";
 import styles from "../../utils/globalStyles";
 import { CustomButton } from "../../utils/customButton";
 import { addStudent } from "../../requests/studentsRequests";
@@ -52,7 +59,7 @@ export const AddStudent = ({ navigation }) => {
   };
 
   return (
-    <View style={style.container}>
+    <ScrollView style={style.container}>
       <Modal
         animationType="slide"
         transparent={true}
@@ -60,7 +67,7 @@ export const AddStudent = ({ navigation }) => {
         onRequestClose={closeModal}
       >
         <View style={style.modalBackdrop}>
-          <UploadFile closeModal={closeModal} />
+          <UploadFile closeModal={closeModal} navigation={navigation} />
         </View>
       </Modal>
 
@@ -152,14 +159,13 @@ export const AddStudent = ({ navigation }) => {
       <View style={style.button}>
         <CustomButton title="העלה קובץ" onPress={() => setModalVisible(true)} />
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
 const style = StyleSheet.create({
   container: {
     flex: 1,
-    position: "relative",
     paddingTop: "20%",
     backgroundColor: "#e6f4fa",
   },
