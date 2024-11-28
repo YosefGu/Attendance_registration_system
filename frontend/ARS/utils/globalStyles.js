@@ -1,63 +1,59 @@
-import { StyleSheet } from "react-native"
-
+import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    padding: 20,
-    backgroundColor: '#fff',
+    justifyContent: "center",
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    backgroundColor: "#e6f4fa",
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 20,
-    textAlign: 'center'
+    textAlign: "center",
+  },
+  title2: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#1f1f1f",
   },
   text: {
-    fontSize:20, 
-    fontWeight:'bold'
+    fontSize: 14,
+    color: "#e0e0e0",
   },
   input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
+    borderWidth: 2,
+    borderColor: "#095b80",
     borderRadius: 5,
     padding: 10,
-    marginVertical: 10
+    marginVertical: 5,
+    backgroundColor: "#cce1e8",
   },
   description: {
     fontSize: 16,
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: 20,
-  } ,
+  },
   inputError: {
-    borderColor: 'red',
-    borderWidth: 1.8
+    borderColor: "red",
+    borderWidth: 1.8,
   },
   modalBackground: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   modalContainer: {
-    width: 350,
-    padding: 10,
-    backgroundColor: 'white',
+    // position:'absolute',
+    width: "85%",
+    padding: 20,
+    backgroundColor: "white",
     borderRadius: 10,
-  },
-  image: {
-    width: 'auto',
-    height: 100,
-    marginBottom: 10,
-    resizeMode:'contain'
-  },
-  buttonsContainer: {
-    flexDirection:'row',
-    justifyContent: 'space-evenly',
-    padding:10,
-    // backgroundColor:'#7655',
+    alignContent: "center",
   },
 });
 
-export default styles
+export default styles;
