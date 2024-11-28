@@ -16,6 +16,14 @@ export const attendanceReducer = (state, action) => {
           uncheckedIDs: [...state.attendance.uncheckedIDs, action.payload],
         },
       };
+    case "ADD_LIST_TO_UNCHECKED_IDS":
+      return {
+        ...state,
+        attendance: {
+          ...state.attendance,
+          uncheckedIDs: [...state.attendance.uncheckedIDs, ...action.payload],
+        },
+      };
     default:
       return state;
   }
