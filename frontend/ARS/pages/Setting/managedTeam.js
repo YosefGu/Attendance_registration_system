@@ -1,4 +1,11 @@
-import { ScrollView, Text, TouchableOpacity, View, StyleSheet } from "react-native";
+import {
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+  StyleSheet,
+  Alert,
+} from "react-native";
 import styles from "../../utils/globalStyles";
 import { useContext, useState } from "react";
 import { CustomButton } from "../../utils/customButton";
@@ -12,14 +19,14 @@ export const ManagedTeam = ({ navigation }) => {
   const team = state.team;
 
   const handle_add_team = async () => {
-    navigation.navigate('AddTeam');
+    navigation.navigate("AddTeam");
   };
 
-  const handlePress = async (id) => {
-    if (!clickedList.some(_id => _id === id)) {
+  const handlePress = (id) => {
+    if (!clickedList.some((_id) => _id === id)) {
       setClickedList([...clickedList, id]);
     } else {
-      setClickedList(clickedList.filter(_id => _id !== id));
+      setClickedList(clickedList.filter((_id) => _id !== id));
     }
   };
 
@@ -27,110 +34,90 @@ export const ManagedTeam = ({ navigation }) => {
     for (const id of clickedList) {
       await deleteUser(id);
     }
-    const updatedTeam = team.filter(item => !clickedList.includes(item.id));
-    dispatch({ type: 'SET_TEAM', payload: updatedTeam });
+    Alert.alert("Deletion was successful");
+    const updatedTeam = team.filter((item) => !clickedList.includes(item.id));
+    dispatch.team({ type: "SET_TEAM", payload: updatedTeam });
     setClickedList([]);
   };
 
   return (
-    <View style={teamStyle.container}>
-      <Text style={styles.title}>Managed Team</Text>
-      <ScrollView contentContainerStyle={teamStyle.scrollContainer}>
+    <View style={styles.container}>
+      <Text style={style.title}>צוות המוסד</Text>
+      <ScrollView style={style.innerContainer}>
         {team && team.length > 0 ? (
           team.map((item, index) => (
             <TouchableOpacity
               style={[
-                teamStyle.box,
-                clickedList.some(id => id === item.id) ? teamStyle.clickedBox : teamStyle.unclickedBox,
+                style.card,
+                clickedList.some((_id) => _id === item.id)
+                  ? style.clickedBox
+                  : style.unclickedBox,
               ]}
               onPress={() => handlePress(item.id)}
               key={index}
             >
-              <View style={teamStyle.textContainer}>
-                <Text style={teamStyle.nameText}>{item.fName} {item.lName}</Text>
-                <Text style={teamStyle.titleText}>{item.title}</Text>
-              </View>
+              <Text style={style.title2}>
+                {item.fName} {item.lName}
+              </Text>
+              <Text style={style.text}>{item.title}</Text>
             </TouchableOpacity>
           ))
         ) : (
-          <Text style={teamStyle.noTeamText}>No team members available.</Text>
+          <Text style={style.noTeamText}>No team members available.</Text>
         )}
       </ScrollView>
-      <View style={teamStyle.buttonContainer}>
+      <View style={style.buttonContainer}>
         <CustomButton
-          title='מחק'
+          title="מחק"
           onPress={handleDelete}
           disabled={clickedList.length < 1}
-          style={clickedList.length < 1 ? teamStyle.disabledButton : teamStyle.deleteButton}
         />
-        <CustomButton
-          title='הוסף איש צוות'
-          onPress={handle_add_team}
-        />
+        <CustomButton title="הוסף איש צוות" onPress={handle_add_team} />
       </View>
     </View>
   );
 };
 
-const teamStyle = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingHorizontal: 20,
-    paddingTop: 10,
-    backgroundColor: '#f8f9fa',
+const style = StyleSheet.create({
+  innerContainer: {
+    margin: 10,
+    padding: 5,
   },
-  scrollContainer: {
-    paddingVertical: 10,
+  title: {
+    fontSize: 24,
+    textAlign: "center",
+    fontWeight: "bold",
+    marginTop: 5,
   },
-  box: {
-    width: "95%",
+  card: {
+    width: "75%",
     height: 80,
     marginVertical: 8,
-    padding: 15,
-    borderRadius: 8,
-    alignSelf: 'center',
-    justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 5,
+    alignSelf: "center",
+    alignItems: "center",
+    justifyContent: "center",
+
+    borderRadius: 10,
+    borderColor: "#095b80",
+    borderWidth: 2,
+  },
+  title2: {
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+  text: {
+    fontSize: 16,
   },
   clickedBox: {
-    backgroundColor: '#449caa',
+    backgroundColor: "#6093ab",
   },
   unclickedBox: {
-    backgroundColor: '#229fff',
+    backgroundColor: "#cce1e8",
   },
-  textContainer: {
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-  },
-  nameText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#fff',
-  },
-  titleText: {
-    fontSize: 14,
-    color: '#e0e0e0',
-  },
-  noTeamText: {
-    fontSize: 16,
-    color: '#777',
-    textAlign: 'center',
-    marginVertical: 20,
-  },
+
   buttonContainer: {
-    marginTop: 20,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-  },
-  deleteButton: {
-    backgroundColor: '#d9534f',
-  },
-  disabledButton: {
-    backgroundColor: '#cccccc',
+    flexDirection: "row",
+    justifyContent: "center",
+    padding: 10,
   },
 });
