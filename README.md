@@ -30,4 +30,5 @@ MongoDB: A NoSQL database for efficient data storage and retrieval.
 
 Frontend:
 React Native: A framework for building native mobile apps for iOS and Android.
+
 Expo: A platform for building, deploying, and testing mobile apps.
