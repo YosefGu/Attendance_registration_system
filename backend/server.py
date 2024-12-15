@@ -12,10 +12,6 @@ from routes.attendanceRoutes import attendance_lists
 
 load_dotenv()
 
-host = os.getenv('HOST')
-port = os.getenv('PORT')
-
-
 app = Flask(__name__)
 
 CORS(app)
@@ -39,4 +35,4 @@ def jwt_protect():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host=host, port=port )
+    app.run(debug=True, host= '0.0.0.0.' , port=5000 )
