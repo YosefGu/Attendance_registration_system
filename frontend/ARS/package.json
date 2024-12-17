@@ -1,5 +1,5 @@
 {
-  "name": "ars",
+  "name": "ars-project",
   "version": "1.0.0",
   "main": "expo/AppEntry.js",
   "scripts": {
@@ -16,6 +16,7 @@
     "@react-navigation/native": "^6.1.18",
     "@react-navigation/native-stack": "^6.11.0",
     "ars": "file:",
+    "ars-project": "file:",
     "axios": "^1.7.7",
     "expo": "^52.0.4",
     "expo-document-picker": "~13.0.1",
