@@ -10,6 +10,8 @@ from routes.userRoutes import users
 from routes.studentRoutes import students
 from routes.attendanceRoutes import attendance_lists
 from routes.periodRoutes import period_data
+from routes.utils import utils
+
 
 load_dotenv()
 
@@ -23,9 +25,11 @@ app.register_blueprint(users)
 app.register_blueprint(students)
 app.register_blueprint(attendance_lists)
 app.register_blueprint(period_data)
+app.register_blueprint(utils)
+
 
 jwt = init_jwt(app)
-public_routes = ['/signup', '/login']
+public_routes = ['/signup', '/login', '/ping']
 
 @app.before_request
 def jwt_protect():
