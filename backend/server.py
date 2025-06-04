@@ -29,7 +29,7 @@ app.register_blueprint(utils)
 
 
 jwt = init_jwt(app)
-public_routes = ['/signup', '/login', '/ping']
+public_routes = ['/signup', '/login', '/ping', '/']
 
 @app.before_request
 def jwt_protect():
@@ -41,4 +41,5 @@ def jwt_protect():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host= '0.0.0.0' , port=5000 )
+    port = int(os.environ.get('PORT', 5000))
+    app.run(debug=True, host= '0.0.0.0' , port=port )
