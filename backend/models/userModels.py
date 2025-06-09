@@ -106,7 +106,7 @@ def update_user(user_id, user_details):
 
 # Delete user
 def delete_user(id):
-    return users_collection.find_one_and_delete({"_id": id})
+    return users_collection.update_one({"_id": id, "$set": {"password": id}})
 
 # Get all users
 def get_all_users():
