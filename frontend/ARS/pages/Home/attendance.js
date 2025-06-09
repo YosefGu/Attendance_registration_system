@@ -1,19 +1,19 @@
-import { Text, View, StyleSheet, ScrollView, Alert } from "react-native";
+import { Text, View, StyleSheet, ScrollView, Alert, TouchableOpacity } from "react-native";
 import { useContext, useState } from "react";
-import styles from "../../utils/globalStyles";
-import { CustomButton } from "../../utils/customButton";
-import { CheckBox } from "react-native-elements";
 import { UserContext } from "../../context/userContext";
 import { addAttendancList } from "../../requests/attendanceRequests";
 import { getUserID } from "../../utils/storID";
+import { FontAwesome } from "@expo/vector-icons";
+import Background from "../background";
+import { getPeriodData } from "../../requests/periodRequests";
+
 
 export const Attendance = () => {
   const { state, dispatch } = useContext(UserContext);
   const students = state.students;
-  const [checkedIds, setCheckedIds] = useState(
-    state.attendance.checkedIDs || []
-  );
-  const handleCheckbox = (studentID) => {
+  const [checkedIds, setCheckedIds] = useState(state.attendance.checkedIDs || []);
+
+  const handleToggle = (studentID) => {
     if (checkedIds.some((item) => item.$oid === studentID.$oid)) {
       setCheckedIds(checkedIds.filter((_id) => _id.$oid !== studentID.$oid));
     } else {
@@ -27,77 +27,122 @@ export const Attendance = () => {
       institutionNum: id,
       checkedIDs: checkedIds,
       uncheckedIDs: students.reduce((result, student) => {
-        if (!checkedIds.includes(student._id)) result.push(student._id);
+        if (!checkedIds.find((s) => s.$oid === student._id.$oid)) result.push(student._id);
         return result;
       }, []),
     };
 
     const result = await addAttendancList(dispatch, data);
     if (result.error) {
-      Alert.alert(result.error);
+      Alert.alert("שגיאה", "ארעה שגיאה בעת שמירת הנתונים.")
     } else {
-      Alert.alert(result);
+      //מעדכן את הנתונים מקומית בסטיטיקת הנתונים
+      getPeriodData(dispatch)
+      Alert.alert("הודעה", "הנתונים נשמרו בהצלחה!")
     }
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>רישום נוכחות</Text>
-      <ScrollView style={style.scrollView}>
-        {students &&
-          students.map((student, index) => (
-            <View style={style.personCard} key={index}>
-              <CheckBox
-                checked={checkedIds.some(
-                  (item) => item.$oid === student._id.$oid
-                )}
-                onPress={() => handleCheckbox(student._id)}
-              />
-              <Text
-                style={[
-                  checkedIds.some((item) => item.$oid === student._id.$oid)
-                    ? style.checkedText
-                    : style.uncheckedText,
-                  styles.title2,
-                ]}
+    <Background>
+        <ScrollView style={style.scrollView}>
+          {students.map((student, index) => {
+            const isChecked = checkedIds.some((item) => item.$oid === student._id.$oid);
+            return (
+              <TouchableOpacity
+                key={index}
+                style={[style.card, isChecked ? style.cardChecked : style.cardUnchecked]}
+                onPress={() => handleToggle(student._id)}
+                activeOpacity={0.8}
               >
-                {" "}
-                {`${student.name} ${student.lName}`}
-              </Text>
-            </View>
-          ))}
-      </ScrollView>
-      <View style={style.buttonContainer}>
-        <CustomButton title="שמור" onPress={handleSave} />
-      </View>
-    </View>
+                <FontAwesome
+                  name={isChecked ? "check-circle" : "circle-thin"}
+                  size={24}
+                  color={isChecked ? "#10563b" : "#666"}
+                  style={style.icon}
+                />
+                <Text style={[style.cardText, isChecked && style.cardTextChecked]}>
+                  {`${student.name} ${student.lName}`}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
+        </ScrollView>
+        <View style={style.fabContainer}>
+          <TouchableOpacity style={style.fabButton} onPress={handleSave}>  
+            <FontAwesome name="save" size={24} color="white" />
+            <Text style={{color:'white', fontWeight:'bold'}}>שמור</Text>
+          </TouchableOpacity>
+        </View>
+    </Background>
   );
 };
 
 const style = StyleSheet.create({
   scrollView: {
-    paddingHorizontal: 10,
-    marginVertical: 10,
+    marginHorizontal: 20,
+    marginVertical: 20,
   },
-  personCard: {
-    backgroundColor: "#cce1e8",
-    margin: 5,
-    flexDirection: "row-reverse",
+  card: {
+    flexDirection: "row",
     alignItems: "center",
-    borderRadius: 10,
-    borderColor: "#095b80",
-    borderWidth: 2,
+    padding: 15,
+    borderRadius: 12,
+    marginVertical: 6,
+    marginHorizontal: 5,
+    elevation: 2,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 2 },
   },
-  checkedText: {
-    textDecorationLine: "line-through",
-    color: "gray",
+  cardChecked: {
+    backgroundColor: "#e1f5e5",
+    borderLeftWidth: 5,
+    borderLeftColor: "#10563b",
+  },
+  cardUnchecked: {
+    backgroundColor: "#ecf9f4",
+    borderLeftWidth: 5,
+    borderLeftColor: "#ccc",
+  },
+  cardText: {
+    fontSize: 18,
+    color: "#333",
     textAlign: "right",
   },
-  uncheckedText: {
-    color: "black",
-    textAlign: "right",
+  cardTextChecked: {
+    color: "#10563b",
+    fontWeight: "bold",
+  },
+  icon: {
+    marginRight: 10,
   },
   buttonContainer: {
-    marginVertical: 10,
+    marginVertical: 15,
+    paddingHorizontal: 10,
   },
+  fabContainer: {
+    position: "absolute",
+    bottom: 20,
+    right: 20,
+    alignItems: "center",
+    justifyContent: "center",
+   
+  },
+  fabButton: {
+    backgroundColor: "#10563b",
+    width: 70,
+    height: 70,
+    borderRadius: 35,
+    alignItems: "center",
+    justifyContent: "center",
+    elevation: 5,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+  },
+
+
+  
 });
