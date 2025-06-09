@@ -18,7 +18,7 @@ export const get_team_members = async (dispatch) => {
     }));
     dispatch.team({ type: "SET_TEAM", payload: data });
   } catch (error) {
-    console.log(error);
+    return
   }
 };
 

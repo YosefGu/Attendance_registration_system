@@ -34,7 +34,9 @@ export const getUserDetails = async (dispatch) => {
       },
     });
     dispatch.user({ type: "SET_USER_DETAILS", payload: response.data });
-  } catch (error) {}
+  } catch (error) {
+    return
+  }
 };
 
 export const updateUser = async (dispatch, user) => {
@@ -68,9 +70,7 @@ export const deleteUser = async (user_ID) => {
           Authorization: `Bearer ${token}`,
         },
       });
-      // console.log(response.data);
     } catch (error) {
-      // console.log("Error deleting user: ", error.data);
     }
   };
   return del();

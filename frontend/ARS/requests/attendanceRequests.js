@@ -6,12 +6,14 @@ import { getUserID } from "../utils/storID";
 export const getAttendancList = async (dispatch) => {
   const token = await getToken();
   const id = await getUserID();
+  
   try {
     const response = await axios.get(`${API_URL}/attendance-list/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
+
     dispatch.attendance({
       type: "SET_ATTENDANCE_LIST",
       payload: {
@@ -27,7 +29,7 @@ export const getAttendancList = async (dispatch) => {
 export const addAttendancList = async (dispatch, data) => {
   try {
     const token = await getToken();
-    const response = await axios.post(`${API_URL}/attendance-list`, data, {
+    await axios.post(`${API_URL}/attendance-list`, data, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -38,3 +40,5 @@ export const addAttendancList = async (dispatch, data) => {
     return error.response;
   }
 };
+
+

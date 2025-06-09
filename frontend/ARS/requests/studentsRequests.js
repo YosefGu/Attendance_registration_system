@@ -15,6 +15,7 @@ export const getStudents = async (dispatch) => {
     dispatch.students({ type: "SET_STUDENTS", payload: response.data });
   } catch (error) {
     // console.log("Error fetching students: ", error.data);
+    return 
   }
 };
 
@@ -33,6 +34,7 @@ export const addStudent = async (dispatch, student) => {
     });
   } catch (error) {
     // console.log("Error adding student: ", error.data);
+    return 
   }
 };
 
@@ -65,7 +67,8 @@ export const deleteStudent = async (dispatch, studentID) => {
     });
     dispatch.students({ type: "DELETE_STUDENT", payload: response.data.id });
   } catch (error) {
-    console.log("Error deleting student: ", error.data);
+    // console.log("Error deleting student: ", error.data);
+    return 
   }
 };
 
