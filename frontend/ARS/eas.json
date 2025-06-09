@@ -1,23 +1,21 @@
 {
-  "cli": {
-    "version": ">= 14.2.0",
-    "appVersionSource": "remote"
-  },
-  "build": {
-    "development": {
-      "developmentClient": true,
-      "distribution": "internal"
-    },
-    "preview": {
-      "distribution": "internal"
-    },
-    "production": {
-      "autoIncrement": true
+    "build": {
+        "preview": {
+            "android": {
+                "buildType": "apk"
+            }
+        },
+        "production": {
+            "android": {
+                "buildType": "app-bundle"
+            }
+        },
+        "development": {
+            "developmentClient": true,
+            "distribution": "internal",
+            "env": {
+                "KOTLIN_VERSION": "1.9.25"
+            }
+        }
     }
-  },
-  "submit": {
-    "production": {}
-  }
 }
-
-

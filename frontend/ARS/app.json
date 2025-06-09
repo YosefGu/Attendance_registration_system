@@ -1,15 +1,15 @@
 {
   "expo": {
-    "name": "ARS",
+    "name": "נוכחות בקליק",
     "slug": "ars",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./icons/icon_1.3.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./icons/icon_3.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#dff7ee"
     },
     "ios": {
       "newArchEnabled": true,
@@ -18,13 +18,19 @@
     "android": {
       "newArchEnabled": true,
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "foregroundImage": "./icons/icon_1.3.png",
+        "backgroundColor": "#dff7ee"
       },
-      "package": "com.yosi.gu.ars"
+      "package": "com.yosi.gu.ars",
+      "permissions": [
+        "INTERNET",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE",
+        "MEDIA_LIBRARY"
+      ]
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./icons/icon_4-48.png"
     },
     "extra": {
       "eas": {
