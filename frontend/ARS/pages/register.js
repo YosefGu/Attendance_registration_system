@@ -1,10 +1,19 @@
 import React, { useContext, useState } from "react";
-import { View, TextInput, Text, Alert, StyleSheet } from "react-native";
+import {
+  View,
+  TextInput,
+  Text,
+  Alert,
+  StyleSheet,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+} from "react-native";
 import { AuthContext } from "../context/auth";
-import styles from "../utils/globalStyles";
-import { CustomButton } from "../utils/customButton";
 import { signup } from "../requests/userRequests1";
 import { LoadingScreen } from "./loadingScreen";
+import Background from "./background";
 
 export const Register = ({ navigation }) => {
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -21,6 +30,9 @@ export const Register = ({ navigation }) => {
     password: "",
   });
 
+  const handleBack = () => {
+    navigation.navigate("Login")
+  }
   const handleChange = (key, value) => {
     setForm({
       ...form,
@@ -39,19 +51,12 @@ export const Register = ({ navigation }) => {
 
   const handleRegister = async () => {
     const form = trimForm();
-    if (
-      !form.fName ||
-      !form.lName ||
-      !form.phone ||
-      !form.email ||
-      !form.password ||
-      !confirmPassword
-    ) {
+    if (!form.fName || !form.lName || !form.phone || !form.email || !form.password || !confirmPassword) {
       setIsRegisterClicked(true);
       return;
     }
     if (form.password !== confirmPassword) {
-      setAlert("Passwords do not match.");
+      setAlert("הסיסמאות אינן תואמות");
       return;
     }
 
@@ -64,7 +69,6 @@ export const Register = ({ navigation }) => {
       Alert.alert(result);
       setIsAuthenticated(true);
     }
-    return;
   };
 
   if (loading) {
@@ -72,109 +76,146 @@ export const Register = ({ navigation }) => {
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Register</Text>
-      <View style={style.innerContainer}>
-        <TextInput
-          style={[
-            styles.input,
-            isRegisterClicked && !form.fName ? styles.inputError : null,
-          ]}
-          placeholder="First Name"
-          value={form.fName}
-          onChangeText={(text) =>
-            handleChange("fName", text.replace(/[^a-zA-Zא-ת\s]/g, ""))
-          }
-          keyboardType="default"
-          autoCapitalize="words"
-          maxLength={20}
-        />
-        <TextInput
-          style={[
-            styles.input,
-            isRegisterClicked && !form.lName ? styles.inputError : null,
-          ]}
-          placeholder="Last Name"
-          value={form.lName}
-          onChangeText={(text) =>
-            handleChange("lName", text.replace(/[^a-zA-Zא-ת\s]/g, ""))
-          }
-          keyboardType="default"
-          autoCapitalize="words"
-          maxLength={20}
-        />
-        <TextInput
-          style={[
-            styles.input,
-            isRegisterClicked && !form.phone ? styles.inputError : null,
-          ]}
-          placeholder="Phone"
-          value={form.phone}
-          onChangeText={(text) =>
-            handleChange("phone", text.replace(/[^0-9]/g, ""))
-          }
-          keyboardType="number-pad"
-          maxLength={10}
-        />
-        <TextInput
-          style={[
-            styles.input,
-            isRegisterClicked && !form.email ? styles.inputError : null,
-          ]}
-          placeholder="Email"
-          value={form.email}
-          onChangeText={(text) =>
-            handleChange("email", text.replace(/[^a-zA-Z@.0-9]/g, ""))
-          }
-          maxLength={30}
-        />
+    <Background>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 40 : 0}
+      >
+        <ScrollView contentContainerStyle={style.scrollContainer}>
+          <Text style={style.title}>הרשמה</Text>
+          <Text style={style.subTitle}>שם פרטי</Text>
+          <TextInput
+            style={[style.input, isRegisterClicked && !form.fName && style.inputError]}
+            value={form.fName}
+            onChangeText={(text) => handleChange("fName", text)}
+            keyboardType="default"
+            autoCapitalize="words"
+            maxLength={20}
+          />
 
-        <TextInput
-          style={[
-            styles.input,
-            isRegisterClicked && !form.password ? styles.inputError : null,
-          ]}
-          placeholder="Password"
-          value={form.password}
-          onChangeText={(text) => handleChange("password", text)}
-          maxLength={30}
-        />
+          <Text style={style.subTitle}>שם משפחה</Text>
+          <TextInput
+            style={[style.input, isRegisterClicked && !form.lName && style.inputError]}
+            value={form.lName}
+            onChangeText={(text) => handleChange("lName", text)}
+            keyboardType="default"
+            autoCapitalize="words"
+            maxLength={20}
+          />
 
-        <TextInput
-          style={[
-            styles.input,
-            isRegisterClicked && !confirmPassword ? styles.inputError : null,
-          ]}
-          placeholder="Confirm Password"
-          value={confirmPassword}
-          onChangeText={setConfirmPassword}
-          maxLength={30}
-        />
-        {alert && <Text style={style.alert}>{alert}</Text>}
-      </View>
+          <Text style={style.subTitle}>מספר פלאפון</Text>
+          <TextInput
+            style={[style.input, isRegisterClicked && !form.phone && style.inputError]}
+            value={form.phone}
+            onChangeText={(text) => handleChange("phone", text)}
+            keyboardType="number-pad"
+            maxLength={10}
+          />
 
-      <View style={style.buttonContainer}>
-        <CustomButton
-          title={loading ? "Registering..." : "Register"}
-          onPress={handleRegister}
-          disabled={loading}
-        />
-      </View>
-    </View>
+          <Text style={style.subTitle}>אימייל</Text>
+          <TextInput
+            style={[style.input, isRegisterClicked && !form.email && style.inputError]}
+            value={form.email}
+            onChangeText={(text) => handleChange("email", text)}
+            maxLength={30}
+          />
+
+          <Text style={style.subTitle}>סיסמה</Text>
+          <TextInput
+            style={[style.input, isRegisterClicked && !form.password && style.inputError]}
+            value={form.password}
+            onChangeText={(text) => handleChange("password", text)}
+            secureTextEntry
+            maxLength={30}
+          />
+
+          <Text style={style.subTitle}>אימות סיסמה</Text>
+          <TextInput
+            style={[style.input, isRegisterClicked && !confirmPassword && style.inputError]}
+            value={confirmPassword}
+            onChangeText={setConfirmPassword}
+            secureTextEntry
+            maxLength={30}
+          />
+          <TouchableOpacity
+          onPress={handleBack}>
+            <Text style={style.text}>יש לך חשבון?</Text>
+          </TouchableOpacity>
+          {alert && <Text style={style.alert}>{alert}</Text>}
+
+          <TouchableOpacity
+            onPress={handleRegister}
+            disabled={loading}
+            style={style.button}
+          >
+          
+          <Text style={style.buttonText}>{loading ? "נרשם..." : "הרשמה"}</Text>
+          </TouchableOpacity>
+        </ScrollView>    
+      </KeyboardAvoidingView>
+    </Background>
   );
 };
 
 const style = StyleSheet.create({
-  innerContainer: {
-    paddingHorizontal: 20,
+  scrollContainer: {
+    paddingHorizontal: '10%',
+    paddingBottom: 40,
   },
-  buttonContainer: {
-    paddingHorizontal: 10,
-    paddingTop: 20,
+  container: {
+    flex: 1,
+  },
+  title: {
+    color: '#10563b',
+    fontSize: 44,
+    fontWeight: "bold",
+    marginTop: '20%',
+    marginBottom: '10%',
+    textAlign: "center",
+  },
+  subTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#10563b',
+    marginTop: 10,
   },
   alert: {
     fontSize: 18,
     fontWeight: "600",
     textAlign: "center",
+    color: "red",
+    marginVertical: 10,
+  },
+  button: {
+    backgroundColor: "#A0EACD",
+    marginVertical: 20,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 15,
+  },
+  buttonText: {
+    fontSize: 22,
+    fontWeight: "bold",
+    textAlign: "center",
+    color: '#10563b',
+  },
+  input: {
+    backgroundColor: 'white',
+    borderWidth: 2,
+    borderColor: "#177d56",
+    borderRadius: 10,
+    padding: 10,
+    marginVertical: 5,
+  },
+  inputError: {
+    borderColor: "red",
+    borderWidth: 1.8,
+  },
+  text: {
+    fontSize: 18,
+    color:'#10563b',
+    marginTop:10,
+    textAlign:'center'
   },
 });

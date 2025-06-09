@@ -1,13 +1,11 @@
-import { useContext, useEffect, useState } from "react";
-import { Alert, TextInput, View, Text, TouchableOpacity } from "react-native";
-import styles from "../utils/globalStyles";
-import { AuthContext } from "../context/auth";
-import { CustomButton } from "../utils/customButton";
-import { StyleSheet } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { useContext, useState } from "react";
+import { Alert, TextInput, View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import Feather from "react-native-vector-icons/Feather";
+import { AuthContext } from "../context/auth";
 import { login } from "../requests/userRequests1";
 import { LoadingScreen } from "./loadingScreen";
+import Background from "./background";
+
 
 export const Login = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -36,13 +34,17 @@ export const Login = ({ navigation }) => {
     };
 
     setLoading(true);
-    const result = await login(data);
-    if (result.error) {
-      Alert.alert("Something went wrong.", result.error);
+    try {
+      const result = await login(data);
+      if (result.error) {
+        Alert.alert("משהו השתבש.", result.error);
+      } else {
+        setIsAuthenticated(true);
+      }
+    } catch (error) {
+      Alert.alert("שגיאה נוספת: ", error.message);
+    } finally {
       setLoading(false);
-    } else {
-      setLoading(false);
-      setIsAuthenticated(true);
     }
   };
 
@@ -51,99 +53,123 @@ export const Login = ({ navigation }) => {
   }
 
   return (
-    <>
-      <SafeAreaView style={style.safeArea}>
-        <View style={style.headerContainer}>
-          <Text style={style.headerTitle}>Login</Text>
-        </View>
-      </SafeAreaView>
+    <Background>
+      <View style={style.container}>
+        <Text style={style.title}>כניסה</Text>
 
-      <View style={styles.container}>
-        <Text style={styles.title}>Login</Text>
-        <View style={style.innerContainer}>
+        <Text style={style.subTitle}>אימייל</Text>
+        <TextInput
+          style={[
+            style.input,
+            isLoginClicked && !email ? style.inputError : null,
+          ]}
+          value={email}
+          onChangeText={(text) => setEmail(text)}
+          maxLength={45}
+        />
+        
+        <Text style={style.subTitle}>סיסמה</Text>
+        <View
+          style={[
+            style.input,
+            style.passContainer,
+            isLoginClicked && !password ? style.inputError : null,
+          ]}
+        >
+          <TouchableOpacity onPress={passVisibal}>
+            <Feather name={secure ? "eye-off" : "eye"} size={20} style={{color:'#10563b', marginHorizontal: 5}}/>
+          </TouchableOpacity>
           <TextInput
-            style={[
-              style.input,
-              isLoginClicked && !email ? styles.inputError : null,
-            ]}
-            placeholder="Email"
-            value={email}
-            onChangeText={(text) =>
-              setEmail(text.replace(/[^a-zA-Z@.0-9]/g, ""))
-            }
+            value={password}
+            onChangeText={setPassword}
             maxLength={30}
+            secureTextEntry={secure}
+            style={style.passwordInput}
           />
-          <View
-            style={[
-              style.passContainer,
-              isLoginClicked && !password ? styles.inputError : null,
-            ]}
-          >
-            <TextInput
-              placeholder="Password"
-              value={password}
-              onChangeText={setPassword}
-              maxLength={30}
-              secureTextEntry={secure}
-              style={style.innerInput}
-            />
-            <TouchableOpacity onPress={passVisibal}>
-              <Feather name={secure ? "eye-off" : "eye"} size={24} />
-            </TouchableOpacity>
-          </View>
-          <CustomButton
-            title={loading ? "Login..." : "Login"}
+        </View>
+
+        <TouchableOpacity
             onPress={handleLogin}
             disabled={loading}
-          />
-          <CustomButton title="Signup" onPress={handleSignup} />
-        </View>
+            style={style.button}
+          >
+            <Text style={style.buttonText}>{loading ? "מתחבר..." : "כניסה"}</Text>
+        </TouchableOpacity>
+        
+        <TouchableOpacity
+        onPress={handleSignup}>
+          <Text style={style.text}>לא נרשמת עדיין?</Text>
+        </TouchableOpacity>
       </View>
-    </>
+    </Background>
   );
 };
 
 const style = StyleSheet.create({
-  safeArea: {
-    backgroundColor: "#095b80",
+  container: {
+  flex: 1,
+  paddingHorizontal: '15%',
   },
-  headerContainer: {
-    height: 60,
-    backgroundColor: "#1c749c",
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 15,
-    justifyContent: "center",
-  },
-  headerTitle: {
-    color: "#fff",
-    fontSize: 20,
+  title: {
+    color: '#10563b',
+    fontSize: 44,
     fontWeight: "bold",
+    marginTop: '56%',
+    marginBottom: '17%',
+    textAlign: "center",
   },
-  innerContainer: {
-    paddingHorizontal: 15,
+  subTitle: {
+    fontSize: 18,
+    fontWeight:'bold',
+    color:'#10563b',
+    marginTop:10
+    
+  },
+  text: {
+    fontSize: 18,
+    color:'#10563b',
+    marginTop:10,
+    textAlign:'center'
+  },
+
+  button: {
+    // backgroundColor: '#C1F2DC',
+    backgroundColor: "#A0EACD",
+    // backgroundColor: "#E4F9EF"
+    marginVertical: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 15,
+    marginTop:30
+    
+  },
+  buttonText: {
+    color: "white",
+    fontSize: 22,
+    fontWeight: "bold",
+    textAlign: "center",
+    color:'#10563b',
+  },
+  input: {
+    backgroundColor: 'white',
+    borderWidth: 2,
+    borderColor: "#177d56",
+    borderRadius: 10,
+    padding: 10,
+    marginVertical: 10,
+    minHeight: 45
+  },
+  inputError: {
+    borderColor: "red",
+    borderWidth: 1.8,
   },
   passContainer: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    borderWidth: 2,
-    borderColor: "#095b80",
-    borderRadius: 5,
-    paddingHorizontal: 5,
-    marginHorizontal: 10,
-    marginVertical: 5,
-    marginBottom: 10,
-    paddingRight: 10,
+    paddingHorizontal: 10,
   },
-  input: {
-    borderWidth: 2,
-    borderColor: "#095b80",
-    borderRadius: 5,
-    padding: 10,
-    margin: 10,
-  },
-  innerInput: {
-    width: "90%",
+  passwordInput: {
+    flex: 1,
   },
 });
