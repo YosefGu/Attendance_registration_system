@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-
+import { StatusBar } from "react-native";
 import { AuthProvider, AuthContext } from "./context/auth";
 import { UserProvider } from "./context/userContext";
 
@@ -17,6 +17,13 @@ import { CustomHeader } from "./utils/customHeader";
 import { SideBar } from "./utils/sideBar";
 import { SendMessages } from "./pages/Home/sendMessages";
 import { Main } from "./pages/main";
+import { ArrivalData } from "./pages/arrivalData";
+import { Documents } from "./pages/documents";
+import { Buffer } from 'buffer';
+
+
+global.Buffer = Buffer;
+
 
 const Stack = createNativeStackNavigator();
 
@@ -42,42 +49,52 @@ const AuthenticatedNavigator = () => (
       <Stack.Screen
         name="Attendance"
         component={Attendance}
-        options={{ title: "Attendance" }}
+        options={{ title: "רישום נוכחות" }}
       />
       <Stack.Screen
         name="SendMessages"
         component={SendMessages}
-        options={{ title: "Send Messages" }}
+        options={{ title: "לא נכחו היום" }}
       />
 
       <Stack.Screen
         name="Profile"
         component={Profile}
-        options={{ title: "Profile" }}
+        options={{ title: "פרופיל" }}
       />
 
       <Stack.Screen
         name="ManageStudents"
         component={ManageStudents}
-        options={{ title: "Manage Students" }}
+        options={{ title: "תלמידים" }}
       />
 
       <Stack.Screen
         name="ManagedTeam"
         component={ManagedTeam}
-        options={{ title: "Managed Team" }}
+        options={{ title: "צוות הגן" }}
       />
 
       <Stack.Screen
         name="AddStudent"
         component={AddStudent}
-        options={{ title: "Add Student", navigateTo: "ManageStudents" }}
+        options={{ title: "הוספת תלמיד", navigateTo: "ManageStudents" }}
       />
 
       <Stack.Screen
         name="AddTeam"
         component={AddTeam}
-        options={{ title: "Add Team", navigateTo: "ManagedTeam" }}
+        options={{ title: "הוספת איש צוות", navigateTo: "ManagedTeam" }}
+      />
+      <Stack.Screen
+        name="ArrivalData"
+        component={ArrivalData}
+        options={{ title: "נתוני הגעה" }}
+      />
+      <Stack.Screen
+        name="Documents"
+        component={Documents}
+        options={{ title: "טופס נתוני הגעה" }}
       />
       <Stack.Screen
         name="SideBar"
@@ -90,16 +107,6 @@ const AuthenticatedNavigator = () => (
 
 const UnauthenticatedNavigator = () => (
   <Stack.Navigator
-    screenOptions={({ navigation }) => ({
-      header: ({ options }) => (
-        <CustomHeader
-          title={options.title}
-          navigation={navigation}
-          navigateTo={options.navigateTo}
-        />
-      ),
-      animation: "slide_from_right",
-    })}
   >
     <Stack.Screen
       name="Login"
@@ -109,16 +116,19 @@ const UnauthenticatedNavigator = () => (
     <Stack.Screen
       name="Register"
       component={Register}
-      options={{ title: "Register", navigateTo: "Login" }}
+      options={{ headerShown: false }}
     />
   </Stack.Navigator>
 );
 
 export default function App() {
   return (
+    <>
+    <StatusBar barStyle="dark-content" backgroundColor="#6bb095" />
     <AuthProvider>
       <AppNavigator />
     </AuthProvider>
+  </>
   );
 }
 
