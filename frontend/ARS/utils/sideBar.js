@@ -1,167 +1,177 @@
-import React, { useContext } from 'react'
+import { useContext } from 'react'
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6'
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { UserContext } from '../context/userContext'
 import { AuthContext } from '../context/auth'
+import { FontAwesome } from '@expo/vector-icons';
 
 export const SideBar = ({ navigation, closeSidebar }) => {
     const { state } = useContext(UserContext)
     const { logout } = useContext(AuthContext)
     const user = state.user
   return (
-    
-        <View style={styles.sideBarContainer}>
-            <SafeAreaView style={styles.safeArea}></SafeAreaView>
-
-            <View style={styles.container}>
-                
-                <View style={styles.user}>
-                    <FontAwesome6 
-                        name='pen' 
-                        size={15} 
-                        style={styles.icon} 
-                        onPress={() => {navigation.navigate('Profile'), closeSidebar()}}
-                    />    
-                    <View style={styles.textContainer}>
-                        <Text style={[styles.text, styles.title]}>{user.fName} {user.lName}</Text>
-                        <Text style={styles.text}>{user.phone}</Text>
-                        <Text style={styles.text}>{user.email}</Text>
-                    </View>
-                    <FontAwesome6 
-                        style={styles.cardIcon} 
-                        name='user-large' 
-                        size={40} 
-                    />   
-                </View>
-
-
-                <TouchableOpacity 
-                    style={styles.card}
-                    onPress={() => {navigation.navigate('ManagedTeam'), closeSidebar()}}
-                >
-                    <Text style={styles.cardText}>ניהול צוות</Text>
-                    <FontAwesome6 name='people-group' size={15} style={styles.cardIcon}/>
-                </TouchableOpacity>
-
-                <TouchableOpacity 
-                    style={styles.card}
-                    onPress={() => {navigation.navigate('ManageStudents'), closeSidebar()}}
-                >
-                    <Text style={styles.cardText}>ניהול תלמידים</Text>
-                    <FontAwesome6 name='users-line' size={15} style={styles.cardIcon}/>
-                </TouchableOpacity>
-
+    <View style={style.sideBarContainer}>
+        <View style={style.container}>
+            <View style={style.user}>
+                <FontAwesome6 
+                    style={style.cardIcon} 
+                    name='user-large' 
+                    size={40} 
+                /> 
+                <View style={style.textContainer}>
+                    <Text style={[style.text, style.title]}>{user.fName} {user.lName}</Text>
+                    <Text style={style.text}>{user.phone}</Text>
+                    <Text style={style.text}>{user.email}</Text>
+                </View> 
+                <FontAwesome6 
+                    name='pen' 
+                    size={15} 
+                    style={style.icon} 
+                    onPress={() => {navigation.navigate('Profile'), closeSidebar()}}
+                />  
             </View>
-
-            <View style={styles.exitContainer}>
-                <TouchableOpacity 
-                    style={styles.exitButton}
-                    onPress={logout}
-                >
-                    <Text style={styles.exitText}>התנתק</Text>
-                    <FontAwesome6 name='door-open' size={15} style={styles.exitIcon}/>
-                </TouchableOpacity>
-            </View>
-            
-             
+            <TouchableOpacity 
+                style={style.card}
+                onPress={() => {navigation.navigate('ManagedTeam'), closeSidebar()}}
+            > 
+                <FontAwesome6 name='people-group' size={15} style={style.cardIcon}/>
+                <Text style={style.cardText}>ניהול צוות</Text>
+            </TouchableOpacity>
+            <TouchableOpacity 
+                style={style.card}
+                onPress={() => {navigation.navigate('ManageStudents'), closeSidebar()}}
+            >
+                <FontAwesome6 name='users-line' size={15} style={style.cardIcon}/>
+                <Text style={style.cardText}>ניהול תלמידים</Text>
+            </TouchableOpacity>
+            <TouchableOpacity 
+                style={style.card}
+                onPress={() => {navigation.navigate('ArrivalData'), closeSidebar()}}
+            >
+                <MaterialIcons name="co-present" size={20} style={style.cardIcon} /> 
+                <Text style={style.cardText}>נתוני הגעה</Text>
+            </TouchableOpacity>
+            <TouchableOpacity 
+                style={style.card}
+                onPress={() => {navigation.navigate('Documents'), closeSidebar()}}
+            >
+                <FontAwesome name="file-excel-o" size={20} style={style.cardIcon} /> 
+                <Text style={style.cardText}>טפסים</Text>
+            </TouchableOpacity>
+        </View>
+        <View style={style.exitContainer}>
+            <TouchableOpacity 
+                style={style.exitButton}
+                onPress={logout}
+            >
+                <FontAwesome6 name='door-open' size={15} style={style.exitIcon}/>
+                <Text style={style.exitText}>התנתק</Text>
+            </TouchableOpacity>
         </View>   
-    
-  )
+    </View>   
+)
 }
 
-const styles = StyleSheet.create({
+const style = StyleSheet.create({
     sideBarContainer: {
         position: 'absolute',
-        right:0,
-        width: '75%', 
+        width: '75%',
         height: '100%',
-        backgroundColor: '#abd8eb', 
-        zIndex: 3
-    },
-    safeArea: {
-        backgroundColor: '#095b80',
+        zIndex: 3,
     },
     container: {
-        flex:1,
-        paddingTop:30,
-        backgroundColor:'#1c749c',
+        flex: 1,
+        backgroundColor: '#D6F5E6',
+        paddingTop: 35,
+        paddingHorizontal: 5
     },
     user: {
-        height:'15%',
-        backgroundColor:'#238cba',
-        padding:10,
-        flexDirection:'row',
-        alignItems:'center',
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#B8EBD3',
+        paddingVertical: 15,
+        paddingHorizontal: 10,
+        borderBottomWidth: 1,
+        borderColor: '#A0EACD',
+        borderRadius:20,
+        marginHorizontal: 15,
+        marginVertical: 6,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.15,
+        shadowRadius: 3,
+        elevation: 4,
     },
     icon: {
-        margin:10,
-        backgroundColor:'#f0f0f0',
-        padding:10,
-        borderRadius:20,
-        color:'#095b80'
+        margin: 10,
+        backgroundColor: '#168C61',
+        padding: 8,
+        borderRadius: 20,
+        color: '#fff',
     },
     textContainer: {
-        flex:1,
-        margin:5,
+        flex: 1,
+        marginHorizontal: 10,
     },
     text: {
-        color: '#f0f0f0',
-        textAlign:'right',
-        margin:3,
-        marginRight:15
-
+        color: '#10563B',
+        fontSize: 14,
+        marginVertical: 2,
     },
     title: {
-        fontSize:20,
+        fontSize: 18,
+        fontWeight: '600',
     },
     card: {
-        height:60,
-        backgroundColor:'#095b80',
-        padding:10,
-        paddingRight:25,
-        marginBottom:5,
-        flexDirection:'row',
-        alignContent:'center', 
-        justifyContent:'flex-end',
-
-        shadowColor:'#000',
-        shadowOffset: {width:0, height:3},
-        shadowOpacity: 0.2,  // Shadow transparency
-        shadowRadius: 3,  // Shadow blur
-        elevation: 5,  // For Android (similar to shadow)
-    },
-    cardText: {
-        color: '#f0f0f0',
-        fontSize: 16,
-        marginRight:30,
-        alignSelf:'center'
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#B8EBD3',
+        paddingVertical: 15,
+        paddingHorizontal: 20,
+        marginHorizontal: 15,
+        marginVertical: 6,
+        borderRadius: 12,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 4,
     },
     cardIcon: {
-        color: '#f0f0f0',
-        alignSelf:'center'
+        marginRight: 15,
+        color: '#10563B',
+    },
+    cardText: {
+        color: '#10563B',
+        fontSize: 16,
     },
     exitContainer: {
         paddingBottom: 50,
-        backgroundColor: '#1c749c',
+        backgroundColor: '#D6F5E6',
         alignItems: 'center',
+        justifyContent: 'center',
     },
     exitButton: {
-        padding:15,
-        width:'50%',
-        backgroundColor:'#095b80',
-        flexDirection:'row',
-        alignContent:'center', 
-        justifyContent:'center',
-        borderRadius:17
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#B8EBD3',
+        paddingVertical: 15,
+        paddingHorizontal: 35,
+        borderRadius: 15,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.15,
+        shadowRadius: 3,
+        elevation: 4,
     },
     exitText: {
-        color: '#f0f0f0',
+        color: '#10563B',
         fontSize: 16,
-        marginRight: 10,
+        marginLeft: 8,
     },
     exitIcon: {
-        color: '#f0f0f0',
+        color: '#10563B',
     },
-
 })
