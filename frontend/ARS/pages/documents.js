@@ -236,7 +236,6 @@ const style = StyleSheet.create({
     width:'100%',
     flexDirection: 'row',
     justifyContent:'space-around',
-    // marginBottom: 25
   },
   section: {
     marginBottom: 25,
