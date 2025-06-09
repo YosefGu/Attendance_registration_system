@@ -6,13 +6,12 @@ import {
 } from "../reducers/studentsReducer";
 import { getUserDetails } from "../requests/userRequests1";
 import { getStudents } from "../requests/studentsRequests";
-import {
-  attendanceInitialState,
-  attendanceReducer,
-} from "../reducers/attendanceReducer";
+import { attendanceInitialState, attendanceReducer } from "../reducers/attendanceReducer";
 import { getAttendancList } from "../requests/attendanceRequests";
 import { teamInitialState, teamReducer } from "../reducers/teamReducer";
 import { get_team_members } from "../requests/teamRequests";
+import { periodReducer, periodInitialState } from "../reducers/periodReducer";
+import { getPeriodData } from "../requests/periodRequests";
 
 export const UserContext = createContext();
 
@@ -28,11 +27,14 @@ export const UserProvider = ({ children }) => {
   );
   const [teamState, teamDispatch] = useReducer(teamReducer, teamInitialState);
 
+  const [periodState, periodDispatch] = useReducer(periodReducer, periodInitialState);
+
   const state = {
     user: userState.userDetails,
     students: studentsState.students,
     attendance: attendanceState.attendance,
     team: teamState.team,
+    period: periodState.periodData
   };
 
   const dispatch = {
@@ -40,6 +42,7 @@ export const UserProvider = ({ children }) => {
     students: studentsDispatch,
     attendance: attendanceDispatch,
     team: teamDispatch,
+    period: periodDispatch
   };
 
   useEffect(() => {
@@ -48,6 +51,7 @@ export const UserProvider = ({ children }) => {
       await getStudents(dispatch);
       await getAttendancList(dispatch);
       await get_team_members(dispatch);
+      await getPeriodData(dispatch);
     };
     fetchData();
   }, []);
