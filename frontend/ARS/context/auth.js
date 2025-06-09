@@ -1,6 +1,8 @@
 import { createContext, useEffect, useState } from "react";
 import { verifyToken } from "../utils/auth";
 import { deleteToken } from "../utils/tokenHandling";
+import { LoadingScreen } from "../pages/loadingScreen";
+
 
 export const AuthContext = createContext();
 
@@ -22,11 +24,15 @@ export const AuthProvider = ({ children }) => {
     checkToken();
   }, []);
 
+  if (loading) {
+    return <LoadingScreen />
+  }
+
   return (
     <AuthContext.Provider
       value={{ isAuthenticated, setIsAuthenticated, loading, logout }}
     >
-      {!loading && children}
+      {children}
     </AuthContext.Provider>
   );
 };
