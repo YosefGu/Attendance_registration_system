@@ -68,7 +68,11 @@ export const Attendance = () => {
           })}
         </ScrollView>
         <View style={style.fabContainer}>
-          <TouchableOpacity style={style.fabButton} onPress={handleSave}>  
+          <TouchableOpacity 
+            style={style.fabButton} 
+            onPress={handleSave}
+            disabled={checkedIds != null}
+            >  
             <FontAwesome name="save" size={24} color="white" />
             <Text style={{color:'white', fontWeight:'bold'}}>שמור</Text>
           </TouchableOpacity>
@@ -123,8 +127,8 @@ const style = StyleSheet.create({
   },
   fabContainer: {
     position: "absolute",
-    bottom: 20,
-    right: 20,
+    bottom: 30,
+    right: 40,
     alignItems: "center",
     justifyContent: "center",
    
