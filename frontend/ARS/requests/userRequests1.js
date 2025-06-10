@@ -7,6 +7,7 @@ export const signup = async (data) => {
   try {
     const response = await axios.post(`${API_URL}/signup`, data);
     await storeToken(response.data.access_token);
+    await storeUserID(response.data.user_id);
     return "Registration was successfully completed";
   } catch (error) {
     return error.response.data;
