@@ -2,6 +2,7 @@ import { createContext, useEffect, useState } from "react";
 import { verifyToken } from "../utils/auth";
 import { deleteToken } from "../utils/tokenHandling";
 import { LoadingScreen } from "../pages/loadingScreen";
+import { deleteUserID } from "../utils/storID";
 
 
 export const AuthContext = createContext();
@@ -12,6 +13,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     await deleteToken();
+    await deleteUserID();
     setIsAuthenticated(false);
   };
 
