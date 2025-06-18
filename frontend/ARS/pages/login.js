@@ -157,7 +157,8 @@ const style = StyleSheet.create({
     borderRadius: 10,
     padding: 10,
     marginVertical: 10,
-    minHeight: 45
+    minHeight: 45,
+    textAlign: 'right'
   },
   inputError: {
     borderColor: "red",
@@ -171,5 +172,6 @@ const style = StyleSheet.create({
   },
   passwordInput: {
     flex: 1,
+    textAlign: 'left'
   },
 });

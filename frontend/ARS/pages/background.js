@@ -40,7 +40,7 @@ export default function Background({ children }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#E4F9EF'
+    backgroundColor: '#dff7ee'
   },
   content: {
     flex: 1,

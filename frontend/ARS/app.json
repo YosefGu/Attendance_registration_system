@@ -4,7 +4,7 @@
     "slug": "ars",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./icons/icon_1.3.png",
+    "icon": "./icons/icon_1.4.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./icons/icon_3.png",

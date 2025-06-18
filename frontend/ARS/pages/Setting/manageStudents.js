@@ -262,6 +262,7 @@ export const style = StyleSheet.create({
     fontSize: 16,
     backgroundColor: "#f9f9f9",
     minWidth: '45%',
+    textAlign: 'right'
   },
   bottonsContainer: {
     flexDirection: "row",

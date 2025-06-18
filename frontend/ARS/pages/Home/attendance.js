@@ -71,7 +71,7 @@ export const Attendance = () => {
           <TouchableOpacity 
             style={style.fabButton} 
             onPress={handleSave}
-            disabled={checkedIds != null}
+            disabled={checkedIds.length == 0}
             >  
             <FontAwesome name="save" size={24} color="white" />
             <Text style={{color:'white', fontWeight:'bold'}}>שמור</Text>

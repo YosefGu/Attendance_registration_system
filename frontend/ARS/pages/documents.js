@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { View, Text, Platform, TouchableOpacity, StyleSheet, Alert } from "react-native";
+import DateTimePicker from '@react-native-community/datetimepicker';
+
 import Background from "./background";
 import { createPeriodFile } from "../requests/periodRequests";
 

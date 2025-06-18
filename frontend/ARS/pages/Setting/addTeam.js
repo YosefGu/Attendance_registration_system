@@ -205,6 +205,7 @@ const style = StyleSheet.create({
   marginBottom: 2,
   marginTop:3,
   padding: 10,
+  textAlign: 'right'
   },
   inputError: {
     borderColor: "red",

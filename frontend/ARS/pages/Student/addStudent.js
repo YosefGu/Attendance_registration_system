@@ -172,6 +172,7 @@ const style = StyleSheet.create({
     borderRadius: 10,
     padding: 10,
     marginVertical: 5,
+    textAlign: 'right'
   },
   inputError: {
     borderColor: "red",
