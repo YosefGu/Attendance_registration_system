@@ -44,7 +44,10 @@ export const ArrivalData = () => {
           ))}
         </View>
         <ScrollView style={style.scrollView}>
-          {studentsDetails && studentsDetails.map((student, index) => {
+          {studentsDetails && 
+          schollDays_ &&
+          studentsPeriodData &&
+          studentsDetails.map((student, index) => {
             const studentID = student['_id']['$oid'];
             const schollDays = schollDays_.scholl_days[selectedPeriod];
             const attended = studentsPeriodData[studentID]?.[selectedPeriod] || 0;

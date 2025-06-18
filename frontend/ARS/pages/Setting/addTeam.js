@@ -54,7 +54,9 @@ export const AddTeam = ({ navigation }) => {
       setLoading(true);
       const id = await getUserID();
       const updatedForm = {
-        ...form,
+        ...Object.fromEntries(
+          Object.entries(form).map(([key, value]) => [key, value.trim()])
+        ),
         institutionNum: id,
       };
 

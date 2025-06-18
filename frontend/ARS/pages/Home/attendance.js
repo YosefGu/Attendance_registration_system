@@ -1,5 +1,5 @@
 import { Text, View, StyleSheet, ScrollView, Alert, TouchableOpacity } from "react-native";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState, useRef } from "react";
 import { UserContext } from "../../context/userContext";
 import { addAttendancList } from "../../requests/attendanceRequests";
 import { getUserID } from "../../utils/storID";
@@ -12,6 +12,7 @@ export const Attendance = () => {
   const { state, dispatch } = useContext(UserContext);
   const students = state.students;
   const [checkedIds, setCheckedIds] = useState(state.attendance.checkedIDs || []);
+  const hasInitializedChecked = useRef(false);
 
   const handleToggle = (studentID) => {
     if (checkedIds.some((item) => item.$oid === studentID.$oid)) {
@@ -41,6 +42,18 @@ export const Attendance = () => {
       Alert.alert("הודעה", "הנתונים נשמרו בהצלחה!")
     }
   };
+
+  useEffect(() => {
+  if (
+    !hasInitializedChecked &&
+    students.length > 0 && 
+    state.attendance.checkedIDs
+  ) {
+    setCheckedIds(state.attendance.checkedIDs);
+    hasInitializedChecked.current = true;
+  }
+}, [students, state.attendance.checkedIDs]);
+
 
   return (
     <Background>
